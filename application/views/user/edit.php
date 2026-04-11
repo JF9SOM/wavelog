@@ -247,6 +247,15 @@
 									</div>
 
 									<div class="mb-3">
+										<label><?= __("Time View"); ?></label>
+                                        <select name="user_time_display" class="form-select">
+                                            <option value="utc" <?php if(!isset($user_time_display) || $user_time_display == "utc") { echo "selected=\"selected\""; } ?>>UTC (Default)</option>
+                                            <option value="local" <?php if(isset($user_time_display) && $user_time_display == "local") { echo "selected=\"selected\""; } ?>>Local Time</option>
+                                        </select>
+                                        <small class="form-text text-muted"><?= __("Choose whether to display times in UTC or your selected timezone."); ?></small>
+                                    </div>
+
+									<div class="mb-3">
 										<label for="SelectDateFormat"><?= __("Date Format"); ?></label>
 										<?php if(!isset($user_date_format)) { $user_date_format='d/m/y'; }?>
 										<select name="user_date_format" class="form-select" id="SelectDateFormat" aria-describedby="SelectDateFormatHelp">

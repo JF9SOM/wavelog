@@ -221,6 +221,7 @@ class User extends CI_Controller {
 				$data['user_callsign'] = $this->input->post('user_callsign');
 				$data['user_locator'] = $this->input->post('user_locator');
 				$data['user_timezone'] = $this->input->post('user_timezone');
+				$data['user_time_display'] = $this->input->post('user_time_display') ?? 'utc';
 				$data['user_measurement_base'] = $this->input->post('user_measurement_base') ?? 'K';
 				$data['user_dashboard_map'] = $this->input->post('user_dashboard_map') ?? 'Y';
 				$data['user_dashboard_banner'] = $this->input->post('user_dashboard_banner') ?? 'Y';
@@ -433,6 +434,7 @@ class User extends CI_Controller {
 		$this->form_validation->set_rules('user_email', 'EMail', 'required|valid_email');
 		$this->form_validation->set_rules('user_clublog_name', 'Clublog Username', 'valid_email');
 		$this->form_validation->set_rules('user_timezone', 'Timezone', 'required');
+		$this->form_validation->set_rules('user_time_display', 'Time View', 'required');
 
 		$data['user_form_action'] = site_url('user/edit')."/".$this->uri->segment(3);
 		$data['clubstation'] = ($query->row()->clubstation == 1) ? true : false;
@@ -546,6 +548,12 @@ class User extends CI_Controller {
 			} else {
 				$data['user_timezone'] = $q->user_timezone;
 			}
+
+            if($this->input->post('user_time_display')) {
+                $data['user_time_display'] = $this->input->post('user_time_display', true);
+            } else {
+                $data['user_time_display'] = $q->user_time_display ?? 'utc';
+            }
 
 			if($this->input->post('user_lotw_name')) {
 				$data['user_lotw_name'] = $this->input->post('user_lotw_name', true);
@@ -1014,6 +1022,11 @@ class User extends CI_Controller {
 
 						);
 						$this->input->set_cookie($cookie);
+					}
+
+					// 追加：自分のプロフィール更新ならセッションも即時書き換え
+					if ($this->session->userdata('user_id') == $this->uri->segment(3)) {
+						$this->session->set_userdata('user_time_display', $post_data['user_time_display']);
 					}
 
 					$user_id = $this->input->post('id', true);

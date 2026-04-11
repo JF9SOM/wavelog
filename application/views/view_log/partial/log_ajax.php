@@ -193,17 +193,17 @@ function echoQrbCalcLink($mygrid, $grid, $vucc, $isVisitor = false) {
     <table style="width:100%" id="<?= $tableid ?>" class="table <?= $tableid ?> table-striped table-hover">
         <thead>
             <tr class="titles">
-                <th><?= __("Date"); ?></th>
-                <?php if(($this->config->item('use_auth') && ($this->session->userdata('user_type') >= 2)) || $this->config->item('use_auth') === FALSE || ($this->config->item('show_time'))) { ?>
-                <th><?= __("Time"); ?></th>
-                <?php } ?>
-                <th><?= __("Call"); ?></th>
-                <?php
-                echo_table_header_col($this, $this->session->userdata('user_column1')==""?'Mode':$this->session->userdata('user_column1'));
-                echo_table_header_col($this, $this->session->userdata('user_column2')==""?'RSTS':$this->session->userdata('user_column2'));
-                echo_table_header_col($this, $this->session->userdata('user_column3')==""?'RSTR':$this->session->userdata('user_column3'));
-                echo_table_header_col($this, $this->session->userdata('user_column4')==""?'Band':$this->session->userdata('user_column4'));
-                echo_table_header_col($this, $this->session->userdata('user_column5'));
+               <th><?= __("Date"); ?></th>
+               <?php if(($this->config->item('use_auth') && ($this->session->userdata('user_type') >= 2)) || $this->config->item('use_auth') === FALSE || ($this->config->item('show_time'))) { ?>
+               <th><?= (display_qso_time_label() === 'local') ? __("Localtime") : __("Time"); ?></th> 
+               <?php } ?>
+               <th><?= __("Call"); ?></th>
+               <?php
+               echo_table_header_col($this, $this->session->userdata('user_column1')==""?'Mode':$this->session->userdata('user_column1'));
+               echo_table_header_col($this, $this->session->userdata('user_column2')==""?'RSTS':$this->session->userdata('user_column2'));
+               echo_table_header_col($this, $this->session->userdata('user_column3')==""?'RSTR':$this->session->userdata('user_column3'));
+               echo_table_header_col($this, $this->session->userdata('user_column4')==""?'Band':$this->session->userdata('user_column4'));
+               echo_table_header_col($this, $this->session->userdata('user_column5'));
 
                     if(($this->config->item('use_auth')) && ($this->session->userdata('user_type') >= 2)) {
     		    	if ( strpos($this->session->userdata('user_default_confirmation'),'Q') !== false  ) { ?>
@@ -246,7 +246,7 @@ function echoQrbCalcLink($mygrid, $grid, $vucc, $isVisitor = false) {
                 echo '<tr class="tr'.($i & 1).'" id="qso_'. $row->COL_PRIMARY_KEY .'">'; ?>
             <td><?php $timestamp = strtotime($row->COL_TIME_ON ?? '1970-01-01 00:00:00'); echo date($custom_date_format, $timestamp); ?></td>
             <?php if(($this->config->item('use_auth') && ($this->session->userdata('user_type') >= 2)) || $this->config->item('use_auth') === FALSE || ($this->config->item('show_time'))) { ?>
-                <td><?php $timestamp = strtotime($row->COL_TIME_ON ?? '1970-01-01 00:00:00'); echo date('H:i', $timestamp); ?></td>
+                <td><?php echo display_qso_time($row->COL_TIME_ON ?? '1970-01-01 00:00:00'); ?></td>
             <?php } ?>
             <td>
                 <a id="edit_qso" href="javascript:displayQso(<?php echo $row->COL_PRIMARY_KEY; ?>)"><?php echo str_replace("0","&Oslash;",strtoupper($row->COL_CALL)); ?></a>

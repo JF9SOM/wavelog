@@ -3,7 +3,7 @@
 		<tr class="titles">
             <td><?= __("Date"); ?></td>
             <?php if(($this->config->item('use_auth') && ($this->session->userdata('user_type') >= 2)) || $this->config->item('use_auth') === FALSE || ($this->config->item('show_time'))) { ?>
-            <td><?= __("Time"); ?></td>
+            <td><?= (display_qso_time_label() === 'local') ? __("Localtime") : __("Time"); ?></td>
             <?php } ?>
             <td><?= __("Call"); ?></td>
             <td><?= __("Mode"); ?></td>
@@ -39,7 +39,7 @@
 			<?php  echo '<tr class="tr'.($i & 1).'">'; ?>
 			<td><?php $timestamp = strtotime($row->COL_TIME_ON); echo date($custom_date_format, $timestamp); ?></td>
 			<?php if(($this->config->item('use_auth') && ($this->session->userdata('user_type') >= 2)) || $this->config->item('use_auth') === FALSE || ($this->config->item('show_time'))) { ?>
-				<td><?php $timestamp = strtotime($row->COL_TIME_ON); echo date('H:i', $timestamp); ?></td>
+				<td><?php echo display_qso_time($row->COL_TIME_ON); ?></td>
 			<?php } ?>
 			<td><a data-fancybox data-type="iframe" data-width="750" data-height="520" data-src="<?php echo site_url('logbook/view')."/".$row->COL_PRIMARY_KEY; ?>" href="javascript:;"><?php echo str_replace("0","&Oslash;",strtoupper($row->COL_CALL)); ?></a>
 			</td>
