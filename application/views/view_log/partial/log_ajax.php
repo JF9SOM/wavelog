@@ -133,7 +133,7 @@ function getDistance($distance) {
             <tr class="titles">
                 <th scope="col"><?= __("Date"); ?></th>
                 <?php if(($this->config->item('use_auth') && ($this->session->userdata('user_type') >= 2)) || $this->config->item('use_auth') === FALSE || ($this->config->item('show_time'))) { ?>
-                <th scope="col"><?= __("Time"); ?></th>
+                <th scope="col"><?= (display_qso_time_label() === 'local') ? __("Localtime") : __("Time"); ?></th>
                 <?php } ?>
                 <th scope="col"><?= __("Call"); ?></th>
                 <?php
@@ -184,7 +184,7 @@ function getDistance($distance) {
                 echo '<tr class="tr'.($i & 1).'" id="qso_'. $row->COL_PRIMARY_KEY .'">'; ?>
             <td><?php $timestamp = strtotime($row->COL_TIME_ON ?? '1970-01-01 00:00:00'); echo date($custom_date_format, $timestamp); ?></td>
             <?php if(($this->config->item('use_auth') && ($this->session->userdata('user_type') >= 2)) || $this->config->item('use_auth') === FALSE || ($this->config->item('show_time'))) { ?>
-                <td><?php $timestamp = strtotime($row->COL_TIME_ON ?? '1970-01-01 00:00:00'); echo date('H:i', $timestamp); ?></td>
+                <td><?php echo display_qso_time($row->COL_TIME_ON ?? '1970-01-01 00:00:00'); ?></td>
             <?php } ?>
             <td>
                 <button type="button" class="btn btn-link text-decoration-none p-0 callsign" id="edit_qso" onclick="displayQso(<?php echo (int) $row->COL_PRIMARY_KEY; ?>)"><?php echo html_escape(strtoupper($row->COL_CALL)); ?></button>
