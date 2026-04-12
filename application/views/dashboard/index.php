@@ -242,7 +242,7 @@ function getDistance($distance) {
 					<th><?= __("Date"); ?></th>
 
 					<?php if(($this->config->item('use_auth') && ($this->session->userdata('user_type') >= 2)) || $this->config->item('use_auth') === FALSE || ($this->config->item('show_time'))) { ?>
-					<th><?= __("Time"); ?></th>
+					<th><?= (display_qso_time_label() === 'local') ? __("Localtime") : __("Time"); ?></th>
 					<?php } ?>
 					<th><?= __("Callsign"); ?></th>
 					<?php
@@ -275,7 +275,7 @@ function getDistance($distance) {
 
 					<td><?php $timestamp = strtotime($row->COL_TIME_ON ?? '1970-01-01 00:00:00'); echo date($custom_date_format, $timestamp); ?></td>
 					<?php if(($this->config->item('use_auth') && ($this->session->userdata('user_type') >= 2)) || $this->config->item('use_auth') === FALSE || ($this->config->item('show_time'))) { ?>
-					<td><?php $timestamp = strtotime($row->COL_TIME_ON ?? '1970-01-01 00:00:00'); echo date('H:i', $timestamp); ?></td>
+					<td><?php echo display_qso_time($row->COL_TIME_ON ?? '1970-01-01 00:00:00'); ?></td>
 
 					<?php } ?>
 					<td>

@@ -183,7 +183,8 @@ class QSO
 			// Get Default date format from /config/wavelog.php
 			$custom_date_format = $this->CI->config->item('qso_date_format');
 		}
-		$this->qsoDateTime = date($custom_date_format . " H:i", strtotime($data['COL_TIME_ON'] ?? '1970-01-01 00:00:00'));
+		// Use helper to ensure qsoDateTime is stored in user's local timezone
+		$this->qsoDateTime = date($custom_date_format, strtotime($data['COL_TIME_ON'])) . " " . display_qso_time($data['COL_TIME_ON'] ?? '1970-01-01 00:00:00');
 
 		$this->de = $data['station_callsign'];
 		$this->dx = $data['COL_CALL'];

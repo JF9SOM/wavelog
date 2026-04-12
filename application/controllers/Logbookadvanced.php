@@ -512,7 +512,8 @@ class Logbookadvanced extends CI_Controller {
 		$data['gridsquare'] = $locator2;
 		$data['mygridsquare'] = $locator1;
 		$data['mycallsign'] = $qso['station_callsign'];
-		$data['datetime'] = date($custom_date_format, strtotime($qso['COL_TIME_ON'])). date(' H:i',strtotime($qso['COL_TIME_ON']));
+		// --- Use helper for timezone-aware display ---
+		$data['datetime'] = date($custom_date_format, strtotime($qso['COL_TIME_ON'])) . ' ' . display_qso_time($qso['COL_TIME_ON'] ?? '1970-01-01 00:00:00');
 		$data['satname'] = $qso['COL_SAT_NAME'];
 		$data['orbit'] = $qso['orbit'] ?? null;
 		$data['confirmed'] = ($this->logbook_model->qso_is_confirmed($qso)==true) ? true : false;
@@ -545,7 +546,8 @@ class Logbookadvanced extends CI_Controller {
 		$data['mode'] = $qso['COL_MODE'];
 		$data['mygridsquare'] = $mygrid;
 		$data['mycallsign'] = $qso['station_callsign'];
-		$data['datetime'] = date($custom_date_format, strtotime($qso['COL_TIME_ON'])). date(' H:i',strtotime($qso['COL_TIME_ON']));
+		// --- Use helper for timezone-aware display ---
+		$data['datetime'] = date($custom_date_format, strtotime($qso['COL_TIME_ON'])) . ' ' . display_qso_time($qso['COL_TIME_ON'] ?? '1970-01-01 00:00:00');
 		$data['satname'] = $qso['COL_SAT_NAME'];
 		$data['orbit'] = $qso['orbit'] ?? null;
 		$data['confirmed'] = ($this->logbook_model->qso_is_confirmed($qso)==true) ? true : false;
