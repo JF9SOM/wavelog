@@ -925,9 +925,8 @@ $options = json_decode($options);
                         <div class="form-check" style="margin-top: -1.5em"><input class="form-check-input" type="checkbox" id="checkBoxAll" /></div>
                     </th>
                     <?php if (($options->datetime->show ?? "true") == "true") {
-                        // Display "Date/Localtime" if user preference is set to local, otherwise "Date/Time"
-                        echo '<th>' . __("Date") . '/' . (display_qso_time_label() === 'local' ? __("Localtime") : __("Time")) . '</th>';
-                    } ?>
+                        echo '<th>' . __("Date/Time") . '</th>';
+                    } ?>    
 					 <?php if (($options->duration->show ?? "false") == "true") {
                         echo '<th>' . __("Duration") . '</th>';
                     } ?>

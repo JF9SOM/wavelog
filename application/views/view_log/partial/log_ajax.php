@@ -195,7 +195,7 @@ function echoQrbCalcLink($mygrid, $grid, $vucc, $isVisitor = false) {
             <tr class="titles">
                <th><?= __("Date"); ?></th>
                <?php if(($this->config->item('use_auth') && ($this->session->userdata('user_type') >= 2)) || $this->config->item('use_auth') === FALSE || ($this->config->item('show_time'))) { ?>
-               <th><?= (display_qso_time_label() === 'local') ? __("Localtime") : __("Time"); ?></th> 
+                     <th><?= __("Time"); ?></th>
                <?php } ?>
                <th><?= __("Call"); ?></th>
                <?php
@@ -244,7 +244,7 @@ function echoQrbCalcLink($mygrid, $grid, $vucc, $isVisitor = false) {
                     $custom_date_format = $this->config->item('qso_date_format');
                 }
                 echo '<tr class="tr'.($i & 1).'" id="qso_'. $row->COL_PRIMARY_KEY .'">'; ?>
-            <td><?php $timestamp = strtotime($row->COL_TIME_ON ?? '1970-01-01 00:00:00'); echo date($custom_date_format, $timestamp); ?></td>
+            <td><?php echo display_qso_date($row->COL_TIME_ON ?? '1970-01-01 00:00:00'); ?></td>
             <?php if(($this->config->item('use_auth') && ($this->session->userdata('user_type') >= 2)) || $this->config->item('use_auth') === FALSE || ($this->config->item('show_time'))) { ?>
                 <td><?php echo display_qso_time($row->COL_TIME_ON ?? '1970-01-01 00:00:00'); ?></td>
             <?php } ?>
