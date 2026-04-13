@@ -84,60 +84,78 @@ function resetTimers(qso_manual) {
 }
 
 function getUTCTimeStamp(el) {
-	var now = new Date();
-	$(el).attr('value', ("0" + now.getUTCHours()).slice(-2) + ':' + ("0" + now.getUTCMinutes()).slice(-2) + ':' + ("0" + now.getUTCSeconds()).slice(-2));
+    var now = new Date();
+    /* * If Local Time usage is enabled, use local hours/minutes/seconds.
+     * Otherwise, fallback to UTC as per original Wavelog behavior.
+     */
+    if (typeof user_localtime_usage !== 'undefined' && user_localtime_usage === '1') {
+        $(el).attr('value', ("0" + now.getHours()).slice(-2) + ':' + ("0" + now.getMinutes()).slice(-2) + ':' + ("0" + now.getSeconds()).slice(-2));
+    } else {
+        $(el).attr('value', ("0" + now.getUTCHours()).slice(-2) + ':' + ("0" + now.getUTCMinutes()).slice(-2) + ':' + ("0" + now.getUTCSeconds()).slice(-2));
+    }
 }
 
 function getUTCDateStamp(el) {
-	var now = new Date();
-	var day = ("0" + now.getUTCDate()).slice(-2);
-	var month = ("0" + (now.getUTCMonth() + 1)).slice(-2);
-	var year = now.getUTCFullYear();
-	var short_year = year.toString().slice(-2);
+    var now = new Date();
+    var day, month, year, monthIndex;
 
-	// Format the date based on user_date_format passed from PHP
-	var formatted_date;
-	switch (user_date_format) {
-		case "d/m/y":
-			formatted_date = day + "/" + month + "/" + short_year;
-			break;
-		case "d/m/Y":
-			formatted_date = day + "/" + month + "/" + year;
-			break;
-		case "m/d/y":
-			formatted_date = month + "/" + day + "/" + short_year;
-			break;
-		case "m/d/Y":
-			formatted_date = month + "/" + day + "/" + year;
-			break;
-		case "d.m.Y":
-			formatted_date = day + "." + month + "." + year;
-			break;
-		case "y/m/d":
-			formatted_date = short_year + "/" + month + "/" + day;
-			break;
-		case "Y-m-d":
-			formatted_date = year + "-" + month + "-" + day;
-			break;
-		case "M d, Y":
-			// Need to get the month name abbreviation
-			var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-			formatted_date = monthNames[now.getUTCMonth()] + " " + parseInt(day) + ", " + year;
-			break;
-		case "M d, y":
-			var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-			formatted_date = monthNames[now.getUTCMonth()] + " " + parseInt(day) + ", " + short_year;
-			break;
-		case "d M y":
-			var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-			formatted_date = parseInt(day) + " " + monthNames[now.getUTCMonth()] + " " + short_year;
-			break;
-		default:
-			// Default to d-m-Y format as shown in the PHP code
-			formatted_date = day + "-" + month + "-" + year;
-	}
+    /* * If Local Time usage is enabled, use local date components.
+     * Otherwise, use UTC date components.
+     */
+    if (typeof user_localtime_usage !== 'undefined' && user_localtime_usage === '1') {
+        day = ("0" + now.getDate()).slice(-2);
+        month = ("0" + (now.getMonth() + 1)).slice(-2);
+        year = now.getFullYear();
+        monthIndex = now.getMonth();
+    } else {
+        day = ("0" + now.getUTCDate()).slice(-2);
+        month = ("0" + (now.getUTCMonth() + 1)).slice(-2);
+        year = now.getUTCFullYear();
+        monthIndex = now.getUTCMonth();
+    }
 
-	$(el).attr('value', formatted_date);
+    var short_year = year.toString().slice(-2);
+
+    // Format the date based on user_date_format passed from PHP
+    var formatted_date;
+    var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    switch (user_date_format) {
+        case "d/m/y":
+            formatted_date = day + "/" + month + "/" + short_year;
+            break;
+        case "d/m/Y":
+            formatted_date = day + "/" + month + "/" + year;
+            break;
+        case "m/d/y":
+            formatted_date = month + "/" + day + "/" + short_year;
+            break;
+        case "m/d/Y":
+            formatted_date = month + "/" + day + "/" + year;
+            break;
+        case "d.m.Y":
+            formatted_date = day + "." + month + "." + year;
+            break;
+        case "y/m/d":
+            formatted_date = short_year + "/" + month + "/" + day;
+            break;
+        case "Y-m-d":
+            formatted_date = year + "-" + month + "-" + day;
+            break;
+        case "M d, Y":
+            formatted_date = monthNames[monthIndex] + " " + parseInt(day) + ", " + year;
+            break;
+        case "M d, y":
+            formatted_date = monthNames[monthIndex] + " " + parseInt(day) + ", " + short_year;
+            break;
+        case "d M y":
+            formatted_date = parseInt(day) + " " + monthNames[monthIndex] + " " + short_year;
+            break;
+        default:
+            formatted_date = day + "-" + month + "-" + year;
+    }
+
+    $(el).attr('value', formatted_date);
 }
 
 // Note card state logic including EasyMDE initialization and handling

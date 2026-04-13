@@ -3,7 +3,7 @@
 <div class="table-responsive" style="font-size: 0.95rem;">
   <table class="table table-striped">
     <tr class="log_title titles">
-      <th><?= __("Date/Time"); ?></th>
+    	<th><?= __("Date/Time"); ?></th>
 	<th><?= __("Call"); ?></th>
 	<?php
 	echo_table_header_col($this, $this->session->userdata('user_column1')==""?'Mode':$this->session->userdata('user_column1'));
@@ -29,9 +29,10 @@
   foreach ($query->result() as $row) {
         echo '<tr class="tr'.($i & 1).'">';
           echo '<td>';
-              $timestamp = strtotime($row->COL_TIME_ON);
-              echo date($custom_date_format, $timestamp);
-              echo date(' H:i',strtotime($row->COL_TIME_ON));
+			/* Display date and time based on user preference using helper functions */
+			$local_date_string = display_qso_date($row->COL_TIME_ON);
+			echo date($custom_date_format, strtotime($local_date_string));
+			echo " " . display_qso_time($row->COL_TIME_ON);
           ?>
         </td>
         <td>

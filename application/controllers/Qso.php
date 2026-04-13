@@ -227,11 +227,29 @@ class QSO extends CI_Controller {
 
 		$this->load->model('logbook_model');
 
+		$manual = $this->input->get('manual', TRUE);
+        $start_date = $this->input->post('start_date', TRUE);
+        $start_time = $this->input->post('start_time', TRUE);
+        $end_time = $this->input->post('end_time', TRUE);
+
+        // --- Sadatoshi Logic: 保存直前に逆変換をかける ---
+        if ($this->session->userdata('user_time_display') == 'local') {
+            if (!empty($start_time)) {
+                $utc_start = convert_local_to_utc($start_time, $start_date);
+                $start_time = $utc_start['time'];
+                $start_date = $utc_start['date'];
+            }
+            if (!empty($end_time)) {
+                $utc_end = convert_local_to_utc($end_time, $start_date);
+                $end_time = $utc_end['time'];
+            }
+        }
+
 		$qso_data = [
-			'manual' => $this->input->get('manual', TRUE),
-			'start_date' => $this->input->post('start_date', TRUE),
-			'start_time' => $this->input->post('start_time', TRUE),
-			'end_time' => $this->input->post('end_time', TRUE),
+            'manual' => $manual,           // $this->input... ではなく変数を使う
+            'start_date' => $start_date,   // 変換後の変数を使う
+            'start_time' => $start_time,   // 変換後の変数を使う
+            'end_time' => $end_time,       // 変換後の変数を使う
 			'callsign' => $this->input->post('callsign', TRUE),
 			'prop_mode' => $this->input->post('prop_mode', TRUE) ?? '',
 			'email' => $this->input->post('email', TRUE) ?? NULL,

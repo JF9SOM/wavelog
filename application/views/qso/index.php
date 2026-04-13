@@ -26,6 +26,8 @@ switch ($date_format) {
 ?>
 
 <script language="javascript">
+  /* Force convert session value to integer 1 or 0 */
+  var user_localtime_usage = "<?php echo ($this->session->userdata('user_time_display') == 'local') ? '1' : '0'; ?>";
   var qso_manual  = "<?php echo $manual_mode; ?>";
   var text_error_timeoff_less_timeon = "<?= __("TimeOff is less than TimeOn"); ?>";
   var lang_qso_title_previous_contacts = "<?= __("Previous Contacts"); ?>";
@@ -158,7 +160,7 @@ if (typeof window.DX_WATERFALL_FIELD_MAP === 'undefined') {
                 <div class="mb-3 col-sm-6 col-md-6 col-lg-4 col-xl-4 col-4 ps-0 pe-0">
                 <label for="start_time"><?= __("Time on"); ?></label>
                   <div class="input-group">
-                    <input type="text" class="form-control form-control-sm input_start_time" name="start_time" id="start_time" tabindex="5" value="<?php echo $manual_mode == 0 ? date('H:i:s') : date('H:i'); ?>" size="7" <?php echo ($manual_mode == 0 ? "disabled" : "");  ?> required pattern="[0-2][0-9]:[0-5][0-9]">
+                    <input type="text" class="form-control form-control-sm input_start_time" name="start_time" id="start_time" tabindex="5" value="<?php echo $manual_mode == 0 ? display_qso_time(date('Y-m-d H:i:s')) : display_qso_time(date('Y-m-d H:i')); ?>" size="7" <?php echo ($manual_mode == 0 ? "disabled" : "");  ?> required pattern="[0-2][0-9]:[0-5][0-9]">
                     <?php if ($manual_mode != 1) { ?>
                       <span class="input-group-text btn-included-on-field"><i id="reset_time" data-bs-toggle="tooltip" title="Reset start time" class="fas fa-stopwatch"></i></span>
                     <?php } else { ?>
@@ -170,7 +172,7 @@ if (typeof window.DX_WATERFALL_FIELD_MAP === 'undefined') {
                 <div class="mb-3 col-sm-6 col-md-6 col-lg-4 col-xl-4 col-4">
                   <label for="end_time"><?= __("Time off"); ?></label>
                   <div class="input-group">
-                    <input type="text" class="form-control form-control-sm input_end_time" name="end_time" id="end_time" tabindex="6" value="<?php echo $manual_mode == 0 ? date('H:i:s') : date('H:i'); ?>" size="7" <?php echo ($manual_mode == 0 ? "disabled" : "");  ?> required pattern="[0-2][0-9]:[0-5][0-9]">
+                    <input type="text" class="form-control form-control-sm input_end_time" name="end_time" id="end_time" tabindex="6" value="<?php echo $manual_mode == 0 ? display_qso_time(date('Y-m-d H:i:s')) : display_qso_time(date('Y-m-d H:i')); ?>" size="7" <?php echo ($manual_mode == 0 ? "disabled" : "");  ?> required pattern="[0-2][0-9]:[0-5][0-9]">
                     <?php if ($manual_mode == 1) { ?>
                       <span class="input-group-text btn-included-on-field"><i id="reset_end_time" data-bs-toggle="tooltip" title="Reset end time" class="fas fa-stopwatch"></i></span>
                     <?php } ?>
@@ -178,8 +180,8 @@ if (typeof window.DX_WATERFALL_FIELD_MAP === 'undefined') {
                 </div>
 
                 <?php if ( $manual_mode == 0 ) { ?>
-                  <input class="input_start_time" type="hidden" id="start_time"  name="start_time"value="<?php echo date('H:i:s'); ?>" />
-                  <input class="input_end_time" type="hidden" id="end_time"  name="end_time"value="<?php echo date('H:i:s'); ?>" />
+                  <input class="input_start_time" type="hidden" id="start_time"  name="start_time" value="<?php echo display_qso_time(date('Y-m-d H:i:s')); ?>" />
+                  <input class="input_end_time" type="hidden" id="end_time"  name="end_time" value="<?php echo display_qso_time(date('Y-m-d H:i:s')); ?>" />
                   <input class="input_date" type="hidden" id="start_date" name="start_date" value="<?php echo date($date_format); ?>" />
                 <?php } ?>
               </div>
@@ -194,7 +196,7 @@ if (typeof window.DX_WATERFALL_FIELD_MAP === 'undefined') {
                 <div class="mb-3 col-6">
                   <label for="start_time"><?= __("Time"); ?></label>
                   <div class="input-group">
-                    <input type="text" class="form-control form-control-sm input_start_time" name="start_time" id="start_time" tabindex="5" value="<?php echo $manual_mode == 0 ? date('H:i:s') : date('H:i'); ?>" size="7" <?php echo ($manual_mode == 0 ? "disabled" : "");  ?> required pattern="[0-2][0-9]:[0-5][0-9]">
+                    <input type="text" class="form-control form-control-sm input_start_time" name="start_time" id="start_time" tabindex="5" value="<?php echo $manual_mode == 0 ? display_qso_time(date('Y-m-d H:i:s')) : display_qso_time(date('Y-m-d H:i')); ?>" size="7" <?php echo ($manual_mode == 0 ? "disabled" : "");  ?> required pattern="[0-2][0-9]:[0-5][0-9]">
                     <?php if ($manual_mode == 1) { ?>
                       <span class="input-group-text btn-included-on-field"><i id="reset_start_time" data-bs-toggle="tooltip" title="Reset start time" class="fas fa-stopwatch"></i></span>
                     <?php } ?>
@@ -202,7 +204,7 @@ if (typeof window.DX_WATERFALL_FIELD_MAP === 'undefined') {
                 </div>
 
                 <?php if ( $manual_mode == 0 ) { ?>
-                  <input class="input_start_time" type="hidden" id="start_time"  name="start_time"value="<?php echo date('H:i:s'); ?>" />
+                  <input class="input_start_time" type="hidden" id="start_time"  name="start_time" value="<?php echo display_qso_time(date('Y-m-d H:i:s')); ?>" />
                   <input class="input_date" type="hidden" id="start_date" name="start_date" value="<?php echo date($date_format); ?>" />
                 <?php } ?>
               </div>
