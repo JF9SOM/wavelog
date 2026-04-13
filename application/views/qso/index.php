@@ -26,7 +26,13 @@ switch ($date_format) {
 ?>
 
 <script language="javascript">
+  <?php
+    // Calculate timezone offset without adding new helper functions
+    $tmp_utc = convert_local_to_utc("00:00", date("Y-m-d"));
+    $user_timezone_offset = strtotime(date("Y-m-d")." 00:00 UTC") - strtotime($tmp_utc['date']." ".$tmp_utc['time']." UTC theme");
+  ?>
   /* Force convert session value to integer 1 or 0 */
+  var user_timezone_offset = <?php echo $user_timezone_offset; ?>;
   var user_localtime_usage = "<?php echo ($this->session->userdata('user_time_display') == 'local') ? '1' : '0'; ?>";
   var qso_manual  = "<?php echo $manual_mode; ?>";
   var text_error_timeoff_less_timeon = "<?= __("TimeOff is less than TimeOn"); ?>";
