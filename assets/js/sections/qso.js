@@ -85,11 +85,13 @@ function resetTimers(qso_manual) {
 
 function getUTCTimeStamp(el) {
     var now = new Date();
-    /* * If Local Time usage is enabled, use local hours/minutes/seconds.
-     * Otherwise, fallback to UTC as per original Wavelog behavior.
+    /* * If Local Time usage is enabled, apply the Wavelog-configured timezone offset.
+     * Otherwise, use standard UTC.
      */
     if (typeof user_localtime_usage !== 'undefined' && user_localtime_usage === '1') {
-        $(el).attr('value', ("0" + now.getHours()).slice(-2) + ':' + ("0" + now.getMinutes()).slice(-2) + ':' + ("0" + now.getSeconds()).slice(-2));
+        // Calculate the virtual local time based on Wavelog settings
+        var adjusted = new Date(now.getTime() + (user_timezone_offset * 1000));
+        $(el).attr('value', ("0" + adjusted.getUTCHours()).slice(-2) + ':' + ("0" + adjusted.getUTCMinutes()).slice(-2) + ':' + ("0" + adjusted.getUTCSeconds()).slice(-2));
     } else {
         $(el).attr('value', ("0" + now.getUTCHours()).slice(-2) + ':' + ("0" + now.getUTCMinutes()).slice(-2) + ':' + ("0" + now.getUTCSeconds()).slice(-2));
     }
