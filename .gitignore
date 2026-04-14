@@ -36,3 +36,5 @@ docker-compose.yml
 .htaccess
 .user.ini
 .env
+application/cache/*
+!application/cache/index.html
