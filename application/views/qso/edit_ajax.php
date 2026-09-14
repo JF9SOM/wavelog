@@ -50,13 +50,13 @@
                                 <div class="tab-pane fade show active" id="nav-qso" role="tabpanel" aria-labelledby="nav-qso-tab">
                                     <div class="row">
                                         <div class="mb-3 col-sm-6">
-                                            <label for="start_date"><?= __("Start Date/Time"); ?></label>
-                                            <input type="text" class="form-control" name="time_on" id="time_on" value="<?php echo html_escape($qso->COL_TIME_ON); ?>">
+                                            <label for="start_date"><?= __("Start Date/Time"); ?> <small class="text-muted"><?= (display_qso_time_label() === 'local') ? __("(Local)") : __("(UTC)"); ?></small></label>
+                                            <input type="text" class="form-control" name="time_on" id="time_on" value="<?php echo html_escape(display_qso_datetime($qso->COL_TIME_ON)); ?>">
                                         </div>
 
                                         <div class="mb-3 col-sm-6">
-                                            <label for="start_time"><?= __("End Date/Time"); ?></label>
-                                            <input type="text" class="form-control" name="time_off" id="time_off" value="<?php echo html_escape($qso->COL_TIME_OFF); ?>">
+                                            <label for="start_time"><?= __("End Date/Time"); ?> <small class="text-muted"><?= (display_qso_time_label() === 'local') ? __("(Local)") : __("(UTC)"); ?></small></label>
+                                            <input type="text" class="form-control" name="time_off" id="time_off" value="<?php echo html_escape(display_qso_datetime($qso->COL_TIME_OFF)); ?>">
                                         </div>
                                     </div>
                                     <div class="row">
