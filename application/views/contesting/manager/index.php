@@ -29,8 +29,8 @@
                                     <th><div class="form-check"><input class="form-check-input" type="checkbox" id="checkBoxAll" title="<?= __("Select all") ?>"></div></th>
                                     <th></th>
                                     <th scope="col"><?= __("Status") ?></th>
-                                    <th scope="col"><?= __("Start") ?></th>
-                                    <th scope="col"><?= __("End") ?></th>
+                                    <th scope="col"><?= (display_qso_time_label() === 'local') ? __("Start (Local)") : __("Start (UTC)") ?></th>
+                                    <th scope="col"><?= (display_qso_time_label() === 'local') ? __("End (Local)") : __("End (UTC)") ?></th>
                                     <th scope="col"><?= __("Contest") ?></th>
                                     <th scope="col"><?= __("Station") ?></th>
                                     <th scope="col"><?= __("Comment") ?></th>
@@ -59,8 +59,8 @@
                                         <td><div class="form-check"><input class="row-check form-check-input" type="checkbox" value="<?php echo $row['contest_session_id']; ?>"></div></td>
                                         <td><a target="_blank" href="<?php echo site_url('contesting/logging_engine') . "/" . $row['contest_session_id']; ?>" class="btn btn-success btn-sm"><i class="fas fa-play"></i> <?= __("START") ?></a></td>
                                         <td><?php echo $status; ?></td>
-                                        <td><?php echo !empty($row['time_start']) ? date($custom_date_format . ' H:i', strtotime($row['time_start'])) : '-'; ?></td>
-                                        <td><?php echo !empty($row['time_end']) ? date($custom_date_format . ' H:i', strtotime($row['time_end'])) : '-'; ?></td>
+                                        <td><?php echo !empty($row['time_start']) ? display_qso_date($row['time_start']) . ' ' . display_qso_time($row['time_start']) : '-'; ?></td>
+                                        <td><?php echo !empty($row['time_end']) ? display_qso_date($row['time_end']) . ' ' . display_qso_time($row['time_end']) : '-'; ?></td>
                                         <td><?php echo $row['display_name'] ?></td>
                                         <td class="callsign"><?php echo isset($row['station']) ? $row['station'] : '-'; ?></td>
                                         <td><?php echo isset($row['comment']) ? $row['comment'] : '-'; ?></td>

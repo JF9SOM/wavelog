@@ -614,8 +614,8 @@ class Contesting extends CI_Controller {
 					redirect('contesting');
 				}
 				$contest_adif_id = $this->input->post('contest_adif_id', true);
-				$session_start = $this->input->post('session_start', true);
-				$session_end = $this->input->post('session_end', true);
+				$session_start = $this->_sessionDatetimeToUtc($this->input->post('session_start', true));
+				$session_end = $this->_sessionDatetimeToUtc($this->input->post('session_end', true));
 				$station_location = $this->input->post('station_location', true);
 				$session_notes = $this->input->post('session_notes', true);
 				$exchangefields = $this->_parseExchangeFields($this->input->post('exchangefields', true));
@@ -677,8 +677,8 @@ class Contesting extends CI_Controller {
 
 			case 'post':
 				$contest_session_id = $this->input->post('contest_session_id', true);
-				$time_start = $this->input->post('session_start', true);
-				$time_end = $this->input->post('session_end', true);
+				$time_start = $this->_sessionDatetimeToUtc($this->input->post('session_start', true));
+				$time_end = $this->_sessionDatetimeToUtc($this->input->post('session_end', true));
 				$station_id = $this->input->post('station_location', true);
 				$notes = $this->input->post('session_notes', true);
 				$contest_id = $this->input->post('contest_adif_id', true);
@@ -1867,6 +1867,22 @@ class Contesting extends CI_Controller {
 
 		header('Content-Type: application/json');
 		echo json_encode($payload);
+	}
+
+	/**
+	 * Convert a "YYYY-MM-DDTHH:MM" datetime-local value from the session
+	 * create/edit modal into a "YYYY-MM-DD HH:MM" UTC string for storage.
+	 * The box holds the user's local time when the local time display
+	 * preference is enabled (see convert_local_to_utc() in
+	 * wavelog_general_helper.php); otherwise the value is already UTC.
+	 */
+	private function _sessionDatetimeToUtc($datetime_local) {
+		if (empty($datetime_local) || $this->session->userdata('user_time_display') != 'local') {
+			return str_replace('T', ' ', $datetime_local);
+		}
+		[$local_date, $local_time] = explode('T', $datetime_local);
+		$utc = convert_local_to_utc($local_time, $local_date);
+		return $utc['date'] . ' ' . $utc['time'];
 	}
 
 	private function _parseExchangeFields($json) {
