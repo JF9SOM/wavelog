@@ -3,6 +3,11 @@
 <?php // We need to init some variables for the JS app
 ?>
 <script type="text/javascript">
+    <?php
+        // Calculate timezone offset without adding new helper functions (same approach as qso/index.php)
+        $tmp_utc = convert_local_to_utc("00:00", date("Y-m-d"));
+        $contest_timezone_offset = strtotime(date("Y-m-d")." 00:00 UTC") - strtotime($tmp_utc['date']." ".$tmp_utc['time']." UTC theme");
+    ?>
     window.ContestLoggerConfig = {
         sessionInfo: <?php echo json_encode($session_info); ?>,
         storageKey: <?php echo json_encode($storage_key); ?>,
@@ -11,6 +16,10 @@
         isClubStation: <?php echo json_encode($is_club_station ?? false); ?>,
         measurement_base: 'K', // In hamradio you usually use kilometers
         custom_date_format: <?php echo isset($custom_date_format) ? json_encode($custom_date_format) : 'null'; ?>,
+        localtime: {
+            usage: "<?php echo ($this->session->userdata('user_time_display') == 'local') ? '1' : '0'; ?>",
+            offsetSeconds: <?php echo $contest_timezone_offset; ?>
+        },
         worker: <?php echo json_encode(isset($worker_client_url) ? [
             'url'          => $worker_client_url,
             'topic'        => $worker_topic,

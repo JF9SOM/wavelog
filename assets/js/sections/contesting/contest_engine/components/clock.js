@@ -1,5 +1,11 @@
 /**
- * ClockComponent - UTC time display
+ * ClockComponent - UTC/Local time display
+ *
+ * Shows the user's Wavelog-configured local time when the "local" time
+ * display preference is enabled (window.ContestLoggerConfig.localtime),
+ * otherwise shows plain UTC. Mirrors the offset trick used in qso.js's
+ * getUTCTimeStamp(): apply the offset to the real timestamp, then read
+ * it back out via the UTC getters.
  */
 class ClockComponent {
     constructor(containerId = 'utc-time') {
@@ -20,14 +26,18 @@ class ClockComponent {
     }
 
     updateTime() {
-        const now = new Date();
-        const utcHours = String(now.getUTCHours()).padStart(2, '0');
-        const utcMinutes = String(now.getUTCMinutes()).padStart(2, '0');
-        const utcSeconds = String(now.getUTCSeconds()).padStart(2, '0');
-        const utcTimeString = `${utcHours}:${utcMinutes}:${utcSeconds}`;
+        const localtimeCfg = window.ContestLoggerConfig?.localtime;
+        let now = new Date();
+        if (localtimeCfg && localtimeCfg.usage === '1') {
+            now = new Date(now.getTime() + (localtimeCfg.offsetSeconds * 1000));
+        }
+        const hours = String(now.getUTCHours()).padStart(2, '0');
+        const minutes = String(now.getUTCMinutes()).padStart(2, '0');
+        const seconds = String(now.getUTCSeconds()).padStart(2, '0');
+        const timeString = `${hours}:${minutes}:${seconds}`;
 
         if (this.container) {
-            this.container.innerHTML = utcTimeString;
+            this.container.innerHTML = timeString;
         }
     }
 

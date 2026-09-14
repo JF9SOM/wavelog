@@ -689,6 +689,31 @@ class QsoFormComponent {
 	 * (custom_date_format, e.g. "d.m.Y"). Returns the raw string if it can't
 	 * be parsed. Supports the tokens used by the offered formats: Y y m n d j M.
 	 */
+	/**
+	 * Convert a stored (UTC) date/time pair to the display timezone.
+	 * Mirrors the PHP display_qso_time()/display_qso_date() helpers: only
+	 * affects read-only display, the raw UTC values are left untouched for
+	 * editing and for the actual submitted QSO data. Handles date rollover.
+	 */
+	_localizeDateTime(isoDate, timeStr) {
+		const cfg = window.ContestLoggerConfig?.localtime;
+		const time = (timeStr || '').substring(0, 8);
+		if (!cfg || cfg.usage !== '1' || !isoDate) return { date: isoDate, time };
+
+		const hhmmss = (time || '00:00:00').padEnd(8, ':00').slice(0, 8);
+		const utcMs = Date.parse(`${isoDate}T${hhmmss}Z`);
+		if (Number.isNaN(utcMs)) return { date: isoDate, time };
+
+		const adjusted = new Date(utcMs + cfg.offsetSeconds * 1000);
+		const y  = adjusted.getUTCFullYear();
+		const mo = String(adjusted.getUTCMonth() + 1).padStart(2, '0');
+		const d  = String(adjusted.getUTCDate()).padStart(2, '0');
+		const h  = String(adjusted.getUTCHours()).padStart(2, '0');
+		const mi = String(adjusted.getUTCMinutes()).padStart(2, '0');
+		const s  = String(adjusted.getUTCSeconds()).padStart(2, '0');
+		return { date: `${y}-${mo}-${d}`, time: `${h}:${mi}:${s}` };
+	}
+
 	_formatDate(dateStr) {
 		const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(dateStr || '');
 		if (!m) return dateStr || '';
@@ -754,8 +779,10 @@ class QsoFormComponent {
 		const qrgValue = qso.frequency ? this._hzToUnit(qso.frequency, qrgUnit) : '';
 		const qrgDisp  = qso.frequency ? `${qrgValue} ${qrgUnit}` : '';
 		const isoDate = qso.date || (qso.time_on ? qso.time_on.split(' ')[0] : '');
-		const dateStr = this._formatDate(isoDate);
-		const timeStr = (qso.time || '').substring(0, 8);
+		const rawTime = (qso.time || (qso.time_on ? qso.time_on.split(' ')[1] : '') || '').substring(0, 8);
+		const localized = this._localizeDateTime(isoDate, rawTime);
+		const dateStr = this._formatDate(localized.date);
+		const timeStr = localized.time;
 		const op      = (qso.operator ?? '').toUpperCase();
 
 		const inp = (val, name, cls = '') =>

@@ -144,7 +144,7 @@ $config = [
 							<thead class="table-secondary sticky-top">
 								<tr>
 									<th class="fw-bold"><?= __("Date"); ?></th>
-									<th class="fw-bold"><?= __("Time"); ?></th>
+									<th class="fw-bold"><?= (display_qso_time_label() === 'local') ? __("Localtime") : __("Time"); ?></th>
 									<th class="fw-bold"><?= __("Callsign"); ?></th>
 									<th class="fw-bold"><?= __("Frequency"); ?></th>
 									<th class="fw-bold"><?= __("Band"); ?></th>

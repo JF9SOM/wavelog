@@ -187,7 +187,11 @@ import { SettingsSyncHandler } from './core/settings-sync.js';
 // Control Panel Implementation
 function initControlPanel(windowManager) {
     function updateTime() {
-        const now = new Date();
+        const localtimeCfg = window.ContestLoggerConfig?.localtime;
+        let now = new Date();
+        if (localtimeCfg && localtimeCfg.usage === '1') {
+            now = new Date(now.getTime() + (localtimeCfg.offsetSeconds * 1000));
+        }
         const hours = String(now.getUTCHours()).padStart(2, '0');
         const minutes = String(now.getUTCMinutes()).padStart(2, '0');
         const seconds = String(now.getUTCSeconds()).padStart(2, '0');

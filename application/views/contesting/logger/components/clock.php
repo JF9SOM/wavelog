@@ -1,11 +1,11 @@
 <?php
 $config = [
 	/**
-	 * Simple UTC Clock Component
+	 * Simple UTC/Local Clock Component
 	 */
 
 	"component_name" => "clock",
-	"title" => "UTC",
+	"title" => (display_qso_time_label() === 'local') ? __("Localtime") : "UTC",
 	"version" => "1.0",
 	"author" => "WaveLog Development Team",
 	"default_size" => [
