@@ -422,14 +422,14 @@ class Satellite extends CI_Controller {
 		return $tles;
 	}
 
-	function calcPasses($sat_tles, $yourgrid, $date, $mintime, $minelevation, $timezone = 'UTC') {
+	function calcPasses($sat_tles, $yourgrid, $date, $mintime, $minelevation, $timezone = null) {
 		$this->load->library('satpredict');
-		return $this->satpredict->calcPasses($sat_tles, $yourgrid, $date, $mintime, $minelevation, $timezone);
+		return $this->satpredict->calcPasses($sat_tles, $yourgrid, $date, $mintime, $minelevation, $timezone ?? display_timezone_string());
 	}
 
-	function calcPass($sat_tle, $yourgrid, $date, $mintime, $minelevation, $timezone = 'UTC') {
+	function calcPass($sat_tle, $yourgrid, $date, $mintime, $minelevation, $timezone = null) {
 		$this->load->library('satpredict');
-		return $this->satpredict->calcPass($sat_tle, $yourgrid, $date, $mintime, $minelevation, $timezone);
+		return $this->satpredict->calcPass($sat_tle, $yourgrid, $date, $mintime, $minelevation, $timezone ?? display_timezone_string());
 	}
 
 	function calcSkedPasses($tles) {
@@ -473,6 +473,7 @@ class Satellite extends CI_Controller {
 		$data['skedgrid'] = $skedgrid;
 		$data['date'] = $date;
 		$data['custom_date_format'] = $custom_date_format;
+		$data['zone'] = display_timezone_string();
 
 		$this->load->view('satellite/skedtable', $data);
 	}

@@ -23,6 +23,17 @@
         </div>
     <?php } else {
 
+        // Local-time display support: next_pass['time'] is already localized by
+        // the controller (via display_timezone_string()), but the epoch-based
+        // gmdate() calls below need the raw offset to shift into fake-local time.
+        $amsat_localtime_usage = (display_qso_time_label() === 'local');
+        $amsat_tz_offset_seconds = 0;
+        if ($amsat_localtime_usage) {
+            $amsat_tmp_utc = convert_local_to_utc("00:00", date("Y-m-d"));
+            $amsat_tz_offset_seconds = strtotime(date("Y-m-d")." 00:00 UTC") - strtotime($amsat_tmp_utc['date']." ".$amsat_tmp_utc['time']." UTC theme");
+        }
+        $amsat_tz_label = $amsat_localtime_usage ? __("Local") : "UTC";
+
         // Status -> validated status-palette hex (good -> critical, ordinal).
         $status_hex = [
             'Heard'          => '#22c55e', // green
@@ -79,7 +90,7 @@
                 <div class="amsat-kpi-sub"><?= __("heard or crew active"); ?></div>
             </div>
             <div class="amsat-kpi">
-                <div class="amsat-kpi-val"><?php if ($next_aos) { echo htmlspecialchars($next_aos['time']); ?><small class="ms-1">UTC</small><?php } else { ?>&mdash;<?php } ?></div>
+                <div class="amsat-kpi-val"><?php if ($next_aos) { echo htmlspecialchars($next_aos['time']); ?><small class="ms-1"><?php echo $amsat_tz_label; ?></small><?php } else { ?>&mdash;<?php } ?></div>
                 <div class="amsat-kpi-lbl"><?= __("Next pass"); ?></div>
                 <div class="amsat-kpi-sub"><?php
                     if ($next_aos) {
@@ -139,7 +150,7 @@
                             <div class="amsat-sat-aos flex-shrink-0"><?php
                                 if (isset($next_pass[$name])) {
                                     $np = $next_pass[$name];
-                                    echo '<strong>' . htmlspecialchars($np['time']) . '</strong>&nbsp;<span class="text-muted">UTC</span>';
+                                    echo '<strong>' . htmlspecialchars($np['time']) . '</strong>&nbsp;<span class="text-muted">' . $amsat_tz_label . '</span>';
                                     if ($np['maxel'] !== null) {
                                         echo '&nbsp;<span class="text-muted">&middot; ' . (int)$np['maxel'] . '&deg;</span>';
                                     }
@@ -154,7 +165,7 @@
 
                                     $end_epoch   = $now - $age * 3600;
                                     $start_epoch = $end_epoch - 3600;
-                                    $window_lbl  = gmdate('M d, H:00', $start_epoch) . '&ndash;' . gmdate('H:i', $end_epoch) . ' UTC';
+                                    $window_lbl  = gmdate('M d, H:00', $start_epoch + $amsat_tz_offset_seconds) . '&ndash;' . gmdate('H:i', $end_epoch + $amsat_tz_offset_seconds) . ' ' . $amsat_tz_label;
                                     $age_lbl     = $age === 0 ? __("now") : sprintf(__('%d hours ago'), $age);
 
                                     if ($cell === null) {
@@ -186,7 +197,7 @@
                                         if (!empty($shown)) {
                                             $tip .= '<hr class="my-1">';
                                             foreach ($shown as $rep) {
-                                                $tip .= '<span>' . gmdate('H:i', $rep['epoch']) . '</span> '
+                                                $tip .= '<span>' . gmdate('H:i', $rep['epoch'] + $amsat_tz_offset_seconds) . '</span> '
                                                       . '<strong>' . htmlspecialchars($rep['callsign']) . '</strong> '
                                                       . htmlspecialchars($rep['grid'])
                                                       . ' &mdash; ' . htmlspecialchars(__($rep['status'])) . '<br>';
