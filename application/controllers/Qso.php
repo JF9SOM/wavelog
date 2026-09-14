@@ -530,6 +530,20 @@ class QSO extends CI_Controller {
 			$this->form_validation->set_rules('vucc_grids', 'VUCC Grids', 'callback_check_locator[vucc]');
 		}
 
+		// The edit form (qso/edit_ajax) displays time_on/time_off in the user's
+		// local time when that preference is enabled; convert back to UTC here
+		// before logbook_model->edit() reads $_POST and stores it as-is.
+		if ($this->session->userdata('user_time_display') == 'local') {
+			foreach (['time_on', 'time_off'] as $field) {
+				$posted = trim($this->input->post($field) ?? '');
+				$parts = explode(' ', $posted, 2);
+				if (count($parts) == 2) {
+					$utc = convert_local_to_utc($parts[1], $parts[0]);
+					$_POST[$field] = $utc['date'] . ' ' . $utc['time'];
+				}
+			}
+		}
+
 		$edit_result=array();
 		$edit_result['success']=false;
 		if ($this->form_validation->run()) {
