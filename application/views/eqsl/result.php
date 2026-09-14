@@ -39,9 +39,8 @@ $custom_date_format = $this->session->userdata('user_date_format');
 					</tr>
 					<?php foreach ($eqsl_results as $qso) { ?>
 					<tr>
-						<?php $timestamp = strtotime($qso['date']); ?>
-						<td><?php echo date($custom_date_format, $timestamp) ?></td>
-						<td><?php echo date('H:i', $timestamp); ?></td>
+						<td><?php echo display_qso_date($qso['date']) ?></td>
+						<td><?php echo display_qso_time($qso['date']); ?></td>
 						<td><a id="edit_qso" href="javascript:displayQso(<?php echo $qso['qsoid']; ?>)"><?php echo $qso['call']; ?></a></td>
 						<td><?php echo $qso['mode']; ?></td>
 						<td><?php echo $qso['submode']; ?></td>

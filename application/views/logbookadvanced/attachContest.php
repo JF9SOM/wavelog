@@ -37,8 +37,8 @@
                     <tr onclick="this.querySelector('input').checked = true;">
                         <td><input type="radio" name="selected_contest" value="<?= $row['contest_session_id'] ?>"></td>
                         <td><?php echo $status; ?></td>
-                        <td><?php echo !empty($row['time_start']) ? date($custom_date_format . ' H:i', strtotime($row['time_start'])) : '-'; ?></td>
-                        <td><?php echo !empty($row['time_end']) ? date($custom_date_format . ' H:i', strtotime($row['time_end'])) : '-'; ?></td>
+                        <td><?php echo !empty($row['time_start']) ? display_qso_date($row['time_start']) . ' ' . display_qso_time($row['time_start']) : '-'; ?></td>
+                        <td><?php echo !empty($row['time_end']) ? display_qso_date($row['time_end']) . ' ' . display_qso_time($row['time_end']) : '-'; ?></td>
                         <td><?php echo !empty($row['custom_name']) ? htmlspecialchars($row['custom_name']) . ' <span class="text-muted">(' . htmlspecialchars($row['contestname']) . ')</span>' : htmlspecialchars($row['contestname'] ?? '-'); ?></td>
                         <td><?php echo isset($row['station']) ? $row['station'] : '-'; ?></td>
                         <td><?php echo isset($row['comment']) ? $row['comment'] : '-'; ?></td>

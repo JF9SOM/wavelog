@@ -147,9 +147,9 @@ $ci =& get_instance();
                 }
             ?>
             <?php  echo '<tr class="tr'.($i & 1).'" id="qso_'. $row->COL_PRIMARY_KEY .'">'; ?>
-            <td><?php $timestamp = strtotime($row->COL_TIME_ON ?? '1970-01-01 00:00:00'); echo date($custom_date_format, $timestamp); ?></td>
+            <td><?php echo display_qso_date($row->COL_TIME_ON ?? '1970-01-01 00:00:00'); ?></td>
             <?php if(($this->config->item('use_auth') && ($this->session->userdata('user_type') >= 2)) || $this->config->item('use_auth') === FALSE || ($this->config->item('show_time'))) { ?>
-                <td><?php $timestamp = strtotime($row->COL_TIME_ON ?? '1970-01-01 00:00:00'); echo date('H:i', $timestamp); ?></td>
+                <td><?php echo display_qso_time($row->COL_TIME_ON ?? '1970-01-01 00:00:00'); ?></td>
             <?php } ?>
             <td>
                 <a id="edit_qso" class="callsign" href="javascript:displayQso(<?php echo (int) $row->COL_PRIMARY_KEY; ?>)"><?php echo html_escape(strtoupper($row->COL_CALL)); ?></a>
@@ -174,7 +174,7 @@ $ci =& get_instance();
                   echo '<span ';
                   if ($row->COL_QSL_SENT != "N") {
                      if ($row->COL_QSLSDATE != null) {
-                        $timestamp = ' '.date($custom_date_format, strtotime($row->COL_QSLSDATE));
+                        $timestamp = ' ' . display_qsl_date($row->COL_QSLSDATE);
                      } else {
                         $timestamp = '';
                      }
@@ -216,7 +216,7 @@ $ci =& get_instance();
                   echo '<span ';
                   if ($row->COL_QSL_RCVD != "N") {
                      if ($row->COL_QSLRDATE != null) {
-                        $timestamp = ' '.date($custom_date_format, strtotime($row->COL_QSLRDATE));
+                        $timestamp = ' ' . display_qsl_date($row->COL_QSLRDATE);
                      } else {
                         $timestamp = '';
                      }
@@ -262,8 +262,7 @@ $ci =& get_instance();
                   if ($row->COL_EQSL_QSL_SENT == "Y") {
                      echo "title=\"".__("eQSL")." ".__("Sent");
                      if ($row->COL_EQSL_QSLSDATE != null) {
-                        $timestamp = strtotime($row->COL_EQSL_QSLSDATE);
-                        echo " ".($timestamp != '' ? date($custom_date_format, $timestamp) : '');
+                        echo " " . display_qsl_date($row->COL_EQSL_QSLSDATE);
                      }
                      echo "\" data-bs-toggle=\"tooltip\"";
                   }
@@ -275,8 +274,7 @@ $ci =& get_instance();
                   if ($row->COL_EQSL_QSL_RCVD == "Y") {
                      echo "title=\"".__("eQSL")." ".__("Received");
                      if ($row->COL_EQSL_QSLRDATE != null) {
-                        $timestamp = strtotime($row->COL_EQSL_QSLRDATE);
-                        echo " ".($timestamp != '' ? date($custom_date_format, $timestamp) : '');
+                        echo " " . display_qsl_date($row->COL_EQSL_QSLRDATE);
                      }
                      echo "\" data-bs-toggle=\"tooltip\"";
                   }
@@ -300,8 +298,7 @@ $ci =& get_instance();
                 if ($row->COL_LOTW_QSL_SENT == "Y") {
                    echo "title=\"".__("LoTW")." ".__("Sent");
                    if ($row->COL_LOTW_QSLSDATE != null) {
-                     $timestamp = strtotime($row->COL_LOTW_QSLSDATE);
-                     echo " ".($timestamp != '' ? date($custom_date_format, $timestamp) : '');
+                     echo " " . display_qsl_date($row->COL_LOTW_QSLSDATE);
                    }
                    echo "\" data-bs-toggle=\"tooltip\" class=\"lotw-green\"";
                 } elseif ($row->COL_LOTW_QSL_SENT == "I") {
@@ -315,8 +312,7 @@ $ci =& get_instance();
                 if ($row->COL_LOTW_QSL_RCVD == "Y") {
                    echo "title=\"".__("LoTW")." ".__("Received");
                    if ($row->COL_LOTW_QSLRDATE != null) {
-                      $timestamp = strtotime($row->COL_LOTW_QSLRDATE);
-                      echo " ".($timestamp != '' ? date($custom_date_format, $timestamp) : '');
+                      echo " " . display_qsl_date($row->COL_LOTW_QSLRDATE);
                    }
                    echo "\" data-bs-toggle=\"tooltip\" class=\"lotw-green\"";
                 } elseif ($row->COL_LOTW_QSL_RCVD == "I") {
@@ -334,8 +330,7 @@ $ci =& get_instance();
                 if ($row->COL_QRZCOM_QSO_UPLOAD_STATUS == "Y") {
                    echo "title=\"QRZ ".__("Sent");
                    if ($row->COL_QRZCOM_QSO_UPLOAD_DATE != null) {
-                     $timestamp = strtotime($row->COL_QRZCOM_QSO_UPLOAD_DATE);
-                     echo " ".($timestamp != '' ? date($custom_date_format, $timestamp) : '');
+                     echo " " . display_qsl_date($row->COL_QRZCOM_QSO_UPLOAD_DATE);
                    }
                    echo "\" data-bs-toggle=\"tooltip\"";
                 }
@@ -353,8 +348,7 @@ $ci =& get_instance();
                 if ($row->COL_QRZCOM_QSO_DOWNLOAD_STATUS == "Y") {
                    echo "title=\"QRZ ".__("Received");
                    if ($row->COL_QRZCOM_QSO_DOWNLOAD_DATE != null) {
-                      $timestamp = strtotime($row->COL_QRZCOM_QSO_DOWNLOAD_DATE);
-                      echo " ".($timestamp != '' ? date($custom_date_format, $timestamp) : '');
+                      echo " " . display_qsl_date($row->COL_QRZCOM_QSO_DOWNLOAD_DATE);
                    }
                    echo "\" data-bs-toggle=\"tooltip\"";
                 }
@@ -370,8 +364,7 @@ $ci =& get_instance();
                 if ($row->COL_CLUBLOG_QSO_UPLOAD_STATUS == "Y") {
                    echo "title=\"Clublog ".__("Sent");
                    if ($row->COL_CLUBLOG_QSO_UPLOAD_DATE != null) {
-                     $timestamp = strtotime($row->COL_CLUBLOG_QSO_UPLOAD_DATE);
-                     echo " ".($timestamp != '' ? date($custom_date_format, $timestamp) : '');
+                     echo " " . display_qsl_date($row->COL_CLUBLOG_QSO_UPLOAD_DATE);
                    }
                    echo "\" data-bs-toggle=\"tooltip\"";
                 }
@@ -389,8 +382,7 @@ $ci =& get_instance();
                 if ($row->COL_CLUBLOG_QSO_DOWNLOAD_STATUS == "Y") {
                    echo "title=\"Clublog ".__("Received");
                    if ($row->COL_CLUBLOG_QSO_DOWNLOAD_DATE != null) {
-                      $timestamp = strtotime($row->COL_CLUBLOG_QSO_DOWNLOAD_DATE);
-                      echo " ".($timestamp != '' ? date($custom_date_format, $timestamp) : '');
+                      echo " " . display_qsl_date($row->COL_CLUBLOG_QSO_DOWNLOAD_DATE);
                    }
                    echo "\" data-bs-toggle=\"tooltip\"";
                 }
@@ -406,8 +398,7 @@ $ci =& get_instance();
                 if ($row->COL_DCL_QSL_SENT == "Y") {
                    echo "title=\"DCL ".__("Sent");
                    if ($row->COL_DCL_QSLSDATE != null) {
-                     $timestamp = strtotime($row->COL_DCL_QSLSDATE);
-                     echo " ".($timestamp != '' ? date($custom_date_format, $timestamp) : '');
+                     echo " " . display_qsl_date($row->COL_DCL_QSLSDATE);
                    }
                    echo "\" data-bs-toggle=\"tooltip\"";
                 }
@@ -425,8 +416,7 @@ $ci =& get_instance();
                 if ($row->COL_DCL_QSL_RCVD == "Y") {
                    echo "title=\"DCL ".__("Received");
                    if ($row->COL_DCL_QSLRDATE != null) {
-                      $timestamp = strtotime($row->COL_DCL_QSLRDATE);
-                      echo " ".($timestamp != '' ? date($custom_date_format, $timestamp) : '');
+                      echo " " . display_qsl_date($row->COL_DCL_QSLRDATE);
                    }
                    echo "\" data-bs-toggle=\"tooltip\"";
                 }

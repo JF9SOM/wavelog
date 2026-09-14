@@ -100,9 +100,9 @@
 			}
 			?>
 			<?php  echo '<tr class="tr'.($i & 1).'" id ="qso_'. $row->COL_PRIMARY_KEY .'">'; ?>
-			<td><?php $timestamp = strtotime($row->COL_TIME_ON); echo date($custom_date_format, $timestamp); ?></td>
+			<td><?php echo display_qso_date($row->COL_TIME_ON); ?></td>
 			<?php if(($this->config->item('use_auth') && ($this->session->userdata('user_type') >= 2)) || $this->config->item('use_auth') === FALSE || ($this->config->item('show_time'))) { ?>
-				<td><?php $timestamp = strtotime($row->COL_TIME_ON); echo date('H:i', $timestamp); ?></td>
+				<td><?php echo display_qso_time($row->COL_TIME_ON); ?></td>
 			<?php } ?>
 			<td>
 				<a id="edit_qso" class="callsign" href="javascript:displayQso(<?php echo (int) $row->COL_PRIMARY_KEY; ?>)"><?php echo html_escape(strtoupper($row->COL_CALL)); ?></a>

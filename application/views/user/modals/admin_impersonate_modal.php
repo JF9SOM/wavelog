@@ -28,7 +28,7 @@
                         </tr>
                         <tr>
                             <td class="pe-3"><?= __("Last Seen:"); ?></td>
-                            <td><strong><?php echo isset($last_seen) ? date($custom_date_format . ' H:i:s', strtotime($last_seen)) : __("Never"); ?></strong></td>
+                            <td><strong><?php echo isset($last_seen) ? display_qso_date($last_seen) . ' ' . display_qso_time($last_seen) : __("Never"); ?></strong></td>
                         </tr>
                     </table>
                 <?php } else { ?>

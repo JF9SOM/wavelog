@@ -23,7 +23,7 @@
                 <?php foreach ($sig_all->result() as $row) { ?>
                     <tr>
                         <td><?php echo html_escape($row->COL_SIG_INFO); ?></td>
-                        <td><?php $timestamp = strtotime($row->COL_TIME_ON); echo date('d/m/y', $timestamp) . ' - ' . date('H:i', $timestamp); ?></td>
+                        <td><?php echo display_qso_date($row->COL_TIME_ON) . ' - ' . display_qso_time($row->COL_TIME_ON); ?></td>
                         <td class="callsign"><?php echo html_escape($row->COL_CALL); ?></td>
                         <td><?php echo html_escape($row->COL_MODE); ?></td>
                         <td><?php echo html_escape($row->COL_BAND); ?></td>

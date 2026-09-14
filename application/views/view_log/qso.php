@@ -69,13 +69,13 @@
 
                         ?>
 
-                        <th scope="row"><?= __("Date/Time"); ?></th>
+                        <th scope="row"><?= __("Date/Time"); ?> <small class="text-muted"><?= (display_qso_time_label() === 'local') ? __("(Local)") : __("(UTC)"); ?></small></th>
                         <?php if(($this->config->item('use_auth') && ($this->session->userdata('user_type') >= 2)) || $this->config->item('use_auth') === FALSE || ($this->config->item('show_time'))) { ?>
-                        <td><?php $timestamp = strtotime($row->COL_TIME_ON); echo date($custom_date_format, $timestamp); $timestamp = strtotime($row->COL_TIME_ON); $time_on = date('H:i', $timestamp); echo " at ".$time_on; ?>
-                        <?php $timestamp = strtotime($row->COL_TIME_OFF); $time_off = date('H:i', $timestamp); if ($time_on != $time_off) { echo " - ".$time_off; } ?>
+                        <td><?php echo display_qso_date($row->COL_TIME_ON); $time_on = display_qso_time($row->COL_TIME_ON); echo " at ".$time_on; ?>
+                        <?php $time_off = display_qso_time($row->COL_TIME_OFF); if ($time_on != $time_off) { echo " - ".$time_off; } ?>
                         </td>
                         <?php } else { ?>
-                        <td><?php $timestamp = strtotime($row->COL_TIME_ON); echo date($custom_date_format, $timestamp); ?></td>
+                        <td><?php echo display_qso_date($row->COL_TIME_ON); ?></td>
                         <?php } ?>
                     </tr>
 
@@ -455,7 +455,7 @@
                             <p><?= __("QSL Card has been sent"); ?>
                         <?php } ?>
                         <?php if ($row->COL_QSLSDATE != null) { ?>
-                            <?php $timestamp = strtotime($row->COL_QSLSDATE); echo " (".date($custom_date_format, $timestamp).")"; ?></p>
+                            <?php echo " (" . display_qsl_date($row->COL_QSLSDATE) . ")"; ?></p>
                         <?php } ?>
                     <?php } ?>
 
@@ -472,18 +472,25 @@
                             <p><?= __("QSL Card has been received"); ?>
                         <?php } ?>
                         <?php if ($row->COL_QSLRDATE != null) { ?>
-                            <?php $timestamp = strtotime($row->COL_QSLRDATE); echo " (".date($custom_date_format, $timestamp).")"; ?></p>
+                            <?php echo " (" . display_qsl_date($row->COL_QSLRDATE) . ")"; ?></p>
                         <?php } ?>
                     <?php } ?>
 
                 <?php } ?>
                     <?php if($row->lotwuser != null) { ?>
-                    <br /><p><?= __("This station uses LoTW."); ?> <a href="https://lotw.arrl.org/lotwuser/act?act=<?php echo html_escape($row->COL_CALL);?>" target="_blank"><?= __("Last Upload").'</a>: '; ?><?php $timestamp = strtotime($row->lastupload); echo date($custom_date_format, $timestamp); $timestamp = strtotime($row->lastupload); echo " ".date('H:i', $timestamp);?> UTC.</p>
+                    <br /><p><?= __("This station uses LoTW."); ?> <a href="https://lotw.arrl.org/lotwuser/act?act=<?php echo html_escape($row->COL_CALL);?>" target="_blank"><?= __("Last Upload").'</a>: '; ?><?php echo display_qso_date($row->lastupload) . ' ' . display_qso_time($row->lastupload); if (display_qso_time_label() !== 'local') { echo ' UTC'; } ?>.</p>
                     <?php } ?>
 
                     <?php if($row->COL_LOTW_QSL_RCVD == "Y" && $row->COL_LOTW_QSLRDATE != null) { ?>
                     <h3><?= __("LoTW"); ?></h3>
-                    <p><?= __("This QSO was confirmed on"); ?> <?php $timestamp = strtotime($row->COL_LOTW_QSLRDATE); echo date($custom_date_format, $timestamp); if (date('H:i', $timestamp) != '00:00') { echo " ".date('H:i', $timestamp);?> UTC<?php } ?>.</p>
+                    <p><?= __("This QSO was confirmed on"); ?> <?php
+                    $lotw_conf_dateonly = (date('H:i:s', strtotime($row->COL_LOTW_QSLRDATE)) === '00:00:00');
+                    echo display_qso_date($row->COL_LOTW_QSLRDATE);
+                    if (!$lotw_conf_dateonly) {
+                        echo ' ' . display_qso_time($row->COL_LOTW_QSLRDATE);
+                        if (display_qso_time_label() !== 'local') { echo ' UTC'; }
+                    }
+                    ?>.</p>
                     <?php } ?>
 
 					<?php if($row->COL_LOTW_QSL_RCVD == "Y" && $row->COL_LOTW_QSLRDATE == null) { ?>
@@ -493,7 +500,7 @@
 
                     <?php if($row->COL_EQSL_QSL_RCVD == "Y" && $row->COL_EQSL_QSLRDATE != null) { ?>
                     <h3>eQSL</h3>
-                        <p><?= __("This QSO was confirmed on"); ?> <?php $timestamp = strtotime($row->COL_EQSL_QSLRDATE); echo date($custom_date_format, $timestamp); ?>.
+                        <p><?= __("This QSO was confirmed on"); ?> <?php echo display_qsl_date($row->COL_EQSL_QSLRDATE); ?>.
                         <?php if (!empty($row->COL_QSLMSG_RCVD)) { ?>
                            <br /><?= __("QSL Message"); ?>: <?php echo htmlentities($row->COL_QSLMSG_RCVD); ?>
                         <?php } ?>
@@ -507,7 +514,7 @@
 
                     <?php if($row->COL_QRZCOM_QSO_DOWNLOAD_STATUS == "Y" && $row->COL_QRZCOM_QSO_DOWNLOAD_DATE != null) { ?>
                     <h3>QRZ.com</h3>
-                        <p><?= __("This QSO was confirmed on"); ?> <?php $timestamp = strtotime($row->COL_QRZCOM_QSO_DOWNLOAD_DATE); echo date($custom_date_format, $timestamp); ?>.</p>
+                        <p><?= __("This QSO was confirmed on"); ?> <?php echo display_qsl_date($row->COL_QRZCOM_QSO_DOWNLOAD_DATE); ?>.</p>
                     <?php } ?>
 
 					<?php if($row->COL_QRZCOM_QSO_DOWNLOAD_STATUS == "Y" && $row->COL_QRZCOM_QSO_DOWNLOAD_DATE == null) { ?>
@@ -517,7 +524,7 @@
 
                     <?php if($row->COL_CLUBLOG_QSO_DOWNLOAD_STATUS == "Y" && $row->COL_CLUBLOG_QSO_DOWNLOAD_DATE != null) { ?>
                     <h3><?= __("Clublog"); ?></h3>
-                        <p><?= __("This QSO was confirmed on"); ?> <?php $timestamp = strtotime($row->COL_CLUBLOG_QSO_DOWNLOAD_DATE); echo date($custom_date_format, $timestamp); ?>.</p>
+                        <p><?= __("This QSO was confirmed on"); ?> <?php echo display_qsl_date($row->COL_CLUBLOG_QSO_DOWNLOAD_DATE); ?>.</p>
                     <?php } ?>
 
 			<?php if($row->COL_CLUBLOG_QSO_DOWNLOAD_STATUS == "Y" && $row->COL_CLUBLOG_QSO_DOWNLOAD_DATE == null) { ?>
@@ -527,7 +534,7 @@
 
                     <?php if($row->COL_DCL_QSL_RCVD == "Y" && $row->COL_DCL_QSLRDATE != null) { ?>
                     <h3><?= __("DCL"); ?></h3>
-                        <p><?= __("This QSO was confirmed on"); ?> <?php $timestamp = strtotime($row->COL_DCL_QSLRDATE); echo date($custom_date_format, $timestamp); ?>.</p>
+                        <p><?= __("This QSO was confirmed on"); ?> <?php echo display_qsl_date($row->COL_DCL_QSLRDATE); ?>.</p>
                     <?php } ?>
 
 					<?php if($row->COL_DCL_QSL_RCVD == "Y" && $row->COL_DCL_QSLRDATE == null) { ?>

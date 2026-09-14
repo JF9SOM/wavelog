@@ -32,7 +32,7 @@
         <th style=\'text-align: center\'>'.__("Callsign").'</th>
         <th style=\'text-align: center\'>'.__("Mode").'</th>
         <th style=\'text-align: center\'>'.__("Date").'</th>
-        <th style=\'text-align: center\'>'.__("Time").'</th>
+        <th style=\'text-align: center\'>'.(display_qso_time_label() === 'local' ? __("Localtime") : __("Time")).'</th>
         <th style=\'text-align: center\'>'.__("Band").'</th>
         <th style=\'text-align: center\'>'.__("Propagation Mode").'</th>
         <th style=\'text-align: center\'>'.__("QSL Message").'</th>
@@ -48,10 +48,10 @@
          echo $qsl->COL_SUBMODE==null?html_escape($qsl->COL_MODE):html_escape($qsl->COL_SUBMODE);
          echo '</td>';
          echo '<td style=\'text-align: center\'>';
-         $timestamp = strtotime($qsl->COL_TIME_ON); echo date($custom_date_format, $timestamp);
+         echo display_qso_date($qsl->COL_TIME_ON);
          echo '</td>';
          echo '<td style=\'text-align: center\'>';
-         $timestamp = strtotime($qsl->COL_TIME_ON); echo date('H:i', $timestamp);
+         echo display_qso_time($qsl->COL_TIME_ON);
          echo '</td>';
          echo '<td style=\'text-align: center\'>';
          if($qsl->COL_SAT_NAME != null) { echo html_escape($qsl->COL_SAT_NAME); } else { echo html_escape(strtolower($qsl->COL_BAND)); };
@@ -63,7 +63,7 @@
          if($qsl->COL_QSLMSG_RCVD != null) { echo htmlentities($qsl->COL_QSLMSG_RCVD); };
          echo '</td>';
          echo '<td style=\'text-align: center\'>';
-         if ($qsl->COL_EQSL_QSLRDATE) { $timestamp = strtotime($qsl->COL_EQSL_QSLRDATE); echo date($custom_date_format, $timestamp); }
+         echo display_qsl_date($qsl->COL_EQSL_QSLRDATE);
          echo '</td>';
             echo '<td style=\'text-align: center\'><a href=\''.site_url('eqsl/image/'.$qsl->COL_PRIMARY_KEY).'\' data-fancybox=\'images\' data-width=\'528\' data-height=\'336\' class=\'btn btn-sm btn-success\'>' . __("View") . '<img loading=\'lazy\' src=\''.site_url('eqsl/image/'.$qsl->COL_PRIMARY_KEY).'/160\' height="100px"></a></td>';
             echo '</tr>';

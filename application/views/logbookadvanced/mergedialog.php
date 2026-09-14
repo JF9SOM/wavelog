@@ -24,7 +24,7 @@
                     </div>
                     <div class="card-body">
                         <small>
-                            <strong><?= __("Date/Time"); ?>:</strong> <?php echo html_escape($qso1->COL_TIME_ON) ?><br>
+                            <strong><?= __("Date/Time"); ?>:</strong> <?php echo html_escape(display_qso_datetime($qso1->COL_TIME_ON)) ?><br>
                             <strong><?= __("Call"); ?>:</strong> <?php echo html_escape($qso1->COL_CALL) ?><br>
                             <strong><?= __("Mode"); ?>:</strong> <?php echo html_escape($qso1->COL_MODE) ?> <?php echo html_escape($qso1->COL_SUBMODE ?? '') ?><br>
                             <strong><?= __("Band"); ?>:</strong> <?php echo html_escape($qso1->COL_BAND) ?><br>
@@ -47,7 +47,7 @@
                     </div>
                     <div class="card-body">
                         <small>
-                            <strong><?= __("Date/Time"); ?>:</strong> <?php echo html_escape($qso2->COL_TIME_ON) ?><br>
+                            <strong><?= __("Date/Time"); ?>:</strong> <?php echo html_escape(display_qso_datetime($qso2->COL_TIME_ON)) ?><br>
                             <strong><?= __("Call"); ?>:</strong> <?php echo html_escape($qso2->COL_CALL) ?><br>
                             <strong><?= __("Mode"); ?>:</strong> <?php echo html_escape($qso2->COL_MODE) ?> <?php echo html_escape($qso2->COL_SUBMODE ?? '') ?><br>
                             <strong><?= __("Band"); ?>:</strong> <?php echo html_escape($qso2->COL_BAND) ?><br>

@@ -150,10 +150,8 @@ function write_activators($activators_array, $band, $mode, $sat, $orbit, $propag
     foreach ($activators_array as $line) {
         $call = $line->call;
         $count = $line->count;
-		$timestamp = strtotime($line->first_qso);
-		$first_qso = date($custom_date_format, $timestamp);
-		$timestamp = strtotime($line->last_qso);
-		$last_qso = date($custom_date_format, $timestamp);
+		$first_qso = display_qso_date($line->first_qso);
+		$last_qso = display_qso_date($line->last_qso);
         array_push($activators, array($count, $call, $first_qso, $last_qso));
     }
     arsort($activators);

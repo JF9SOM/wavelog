@@ -140,10 +140,8 @@
                     foreach ($streaks as $streak) {
                         echo '<tr>';
                         echo '<td style=\'text-align: center\'>' . $streak['highstreak'] . '</td>';
-                        $beginstreak_newdate = strtotime($streak['beginstreak']);
-                        echo '<td style=\'text-align: center\'>' . date($custom_date_format, $beginstreak_newdate) . '</td>';
-                        $endstreak_newdate = strtotime($streak['endstreak']);
-                        echo '<td style=\'text-align: center\'>' . date($custom_date_format, $endstreak_newdate) . '</td>';
+                        echo '<td style=\'text-align: center\'>' . display_qso_date($streak['beginstreak']) . '</td>';
+                        echo '<td style=\'text-align: center\'>' . display_qso_date($streak['endstreak']) . '</td>';
                         echo '</tr>';
                     }
 
@@ -167,10 +165,8 @@
 
                     echo '<tr>';
                     echo '<td style=\'text-align: center\'>' . $currentstreak['highstreak'] . '</td>';
-                    $beginstreak_newdate = strtotime($currentstreak['beginstreak']);
-                    echo '<td style=\'text-align: center\'>' . date($custom_date_format, $beginstreak_newdate) . '</td>';
-                    $endstreak_newdate = strtotime($currentstreak['endstreak']);
-                    echo '<td style=\'text-align: center\'>' . date($custom_date_format, $endstreak_newdate) . '</td>';
+                    echo '<td style=\'text-align: center\'>' . display_qso_date($currentstreak['beginstreak']) . '</td>';
+                    echo '<td style=\'text-align: center\'>' . display_qso_date($currentstreak['endstreak']) . '</td>';
                     echo '</tr>';
 
                 echo '</table></div>';
@@ -189,10 +185,8 @@
 
                 echo '<tr>';
                 echo '<td style=\'text-align: center\'>' . $almostcurrentstreak['highstreak'] . '</td>';
-                $beginstreak_newdate = strtotime($almostcurrentstreak['beginstreak']);
-                echo '<td style=\'text-align: center\'>' . date($custom_date_format, $beginstreak_newdate) . '</td>';
-                $endstreak_newdate = strtotime($almostcurrentstreak['endstreak']);
-                echo '<td style=\'text-align: center\'>' . date($custom_date_format, $endstreak_newdate) . '</td>';
+                echo '<td style=\'text-align: center\'>' . display_qso_date($almostcurrentstreak['beginstreak']) . '</td>';
+                echo '<td style=\'text-align: center\'>' . display_qso_date($almostcurrentstreak['endstreak']) . '</td>';
                 echo '</tr>';
 
                 echo '</table></div>';

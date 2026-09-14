@@ -61,9 +61,9 @@
 										$lastSeenTimestamp = strtotime($row->last_seen);
 										$currentTimestamp = time();
 										if (($currentTimestamp - $lastSeenTimestamp) < 120) { ?>
-											<a><i style="color: green;" class="fas fa-circle"></i> <?php echo date($custom_date_format . ' H:i:s', $lastSeenTimestamp); ?></a>
+											<a><i style="color: green;" class="fas fa-circle"></i> <?php echo display_qso_date($row->last_seen) . ' ' . display_qso_time($row->last_seen); ?></a>
 										<?php } else { ?>
-											<a><i style="color: red;" class="fas fa-circle"></i> <?php echo date($custom_date_format . ' H:i:s', $lastSeenTimestamp); ?></a>
+											<a><i style="color: red;" class="fas fa-circle"></i> <?php echo display_qso_date($row->last_seen) . ' ' . display_qso_time($row->last_seen); ?></a>
 										<?php }
 									} else {
 										echo __("Never");
@@ -176,9 +176,9 @@
 										$lastSeenTimestamp = strtotime($row->last_seen);
 										$currentTimestamp = time();
 										if (($currentTimestamp - $lastSeenTimestamp) < 120) {
-											echo "<a><i style=\"color: green;\" class=\"fas fa-circle\"></i> " . date($custom_date_format . ' H:i:s', $lastSeenTimestamp) . "</a>";
+											echo "<a><i style=\"color: green;\" class=\"fas fa-circle\"></i> " . display_qso_date($row->last_seen) . ' ' . display_qso_time($row->last_seen) . "</a>";
 										} else {
-											echo "<a><i style=\"color: red;\" class=\"fas fa-circle\"></i> " . date($custom_date_format . ' H:i:s', $lastSeenTimestamp) . "</a>";
+											echo "<a><i style=\"color: red;\" class=\"fas fa-circle\"></i> " . display_qso_date($row->last_seen) . ' ' . display_qso_time($row->last_seen) . "</a>";
 										}
 									} else {
 										echo __("Never");

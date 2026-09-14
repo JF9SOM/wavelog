@@ -49,12 +49,10 @@
 			echo $qsl->COL_SUBMODE == null ? html_escape($qsl->COL_MODE) : html_escape($qsl->COL_SUBMODE);
 			echo '</td>';
 			echo '<td style=\'text-align: center\'>';
-			$timestamp = strtotime($qsl->COL_TIME_ON);
-			echo date($custom_date_format, $timestamp);
+			echo date($custom_date_format, strtotime(display_qso_date($qsl->COL_TIME_ON)));
 			echo '</td>';
 			echo '<td style=\'text-align: center\'>';
-			$timestamp = strtotime($qsl->COL_TIME_ON);
-			echo date('H:i', $timestamp);
+			echo display_qso_time($qsl->COL_TIME_ON);
 			echo '</td>';
 			echo '<td style=\'text-align: center\'>';
 			if ($qsl->COL_SAT_NAME != null) {
@@ -64,8 +62,8 @@
 			};
 			echo '</td>';
 			echo '<td style=\'text-align: center\'>';
-			$timestamp = strtotime($qsl->COL_QSLRDATE ?? '');
-			echo date($custom_date_format, $timestamp);
+			$qsl_date = display_qsl_date($qsl->COL_QSLRDATE ?? '');
+			echo $qsl_date == '' ? '' : date($custom_date_format, strtotime($qsl_date));
 			echo '</td>';
 			echo '<td id="'.$qsl->id.'" style=\'text-align: center\'><button onclick="deleteQsl(\''.$qsl->id.'\')" class="btn btn-sm btn-danger">' . __("Delete") . '</button></td>';
 			echo '<td style=\'text-align: center\'><button onclick="addQsosToQsl(\''.$qsl->filename.'\')" class="btn btn-sm btn-success">' . __("Add Qsos") . '</button></td>';

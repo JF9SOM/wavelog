@@ -47,9 +47,8 @@
 <?php
 foreach ($qslsnotdownloaded->result_array() as $qsl) {
 	echo "<tr>";
-	$timestamp = strtotime($qsl['COL_TIME_ON']);
-	echo "<td>".date($custom_date_format, $timestamp)."</td>";
-	echo "<td>".date('H:i', $timestamp)."</td>";
+	echo "<td>".display_qso_date($qsl['COL_TIME_ON'])."</td>";
+	echo "<td>".display_qso_time($qsl['COL_TIME_ON'])."</td>";
 	echo "<td><a id=\"view_eqsl_qso\" class=\"callsign\" href=\"javascript:displayQso(".$qsl['COL_PRIMARY_KEY'].")\">".$qsl['COL_CALL']."</a></td>";
 	echo "<td>".$qsl['COL_MODE']."</td>";
 	if(isset($qsl['COL_SUBMODE'])) {
@@ -66,7 +65,7 @@ foreach ($qslsnotdownloaded->result_array() as $qsl) {
 	echo "<td>".$qsl['COL_PROP_MODE']."</td>";
 	echo "<td>";
 	if (!empty($qsl['COL_EQSL_QSLRDATE'])) {
-		echo date($custom_date_format, strtotime($qsl['COL_EQSL_QSLRDATE'])) ?? '';
+		echo display_qsl_date($qsl['COL_EQSL_QSLRDATE']);
 	}
 	echo "</td>";
 	echo "<td><a href=\"".site_url("eqsl/image/".$qsl['COL_PRIMARY_KEY'])."\" data-fancybox=\"images\" data-width=\"528\" data-height=\"336\" class=\"btn btn-primary btn-sm\">" . __("View/Download") . "</a></td>";

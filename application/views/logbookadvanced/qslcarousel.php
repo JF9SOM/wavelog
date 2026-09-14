@@ -43,7 +43,7 @@
 		<?php
 			echo '<tr>';
 			echo '<td>'.html_escape($image->COL_CALL).'</td>';
-			echo '<td>'.html_escape($image->COL_TIME_ON).'</td>';
+			echo '<td>'.html_escape(display_qso_datetime($image->COL_TIME_ON)).'</td>';
 			echo '<td>'.html_escape($image->COL_MODE).'</td>';
 			echo '<td>'.html_escape($image->COL_BAND).'</td>';
 			echo '<td>'.html_escape($image->COL_NAME).'</td>';

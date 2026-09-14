@@ -63,7 +63,7 @@
                         <tr id="qsoID-<?php echo $qso->col_primary_key; ?>"<?php echo $confirmed ? ' data-confirmed="1"' : ''; ?>>
 							<td><div class="form-check"><input class="row-check form-check-input mt-0" type="checkbox" checked /></div></td>
                             <td><?php echo '<a id="edit_qso" href="javascript:displayQso(' . (int) $qso->col_primary_key . ')">' . htmlspecialchars($qso->col_call) . '</a>'; ?></td>
-							<td><?php $timestamp = strtotime($qso->col_time_on); echo date($custom_date_format . ' H:i', $timestamp); ?></td>
+							<td><?php echo display_qso_date($qso->col_time_on) . ' ' . display_qso_time($qso->col_time_on); ?></td>
                             <td><?php echo html_escape($qso->col_submode ? $qso->col_submode : $qso->col_mode); ?></td>
                             <td><?php echo html_escape($qso->col_band); ?></td>
                             <td><?php echo html_escape($qso->station_profile_name); ?></td>
