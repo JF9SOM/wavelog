@@ -1,3 +1,9 @@
+<?php
+// Timezone offset for the JS preset buttons below (same approach as qso/index.php)
+$tmp_utc = convert_local_to_utc("00:00", date("Y-m-d"));
+$session_modal_timezone_offset = strtotime(date("Y-m-d")." 00:00 UTC") - strtotime($tmp_utc['date']." ".$tmp_utc['time']." UTC theme");
+$session_modal_localtime_usage = ($this->session->userdata('user_time_display') == 'local') ? '1' : '0';
+?>
 <div class="modal fade bg-black bg-opacity-50" id="contestCreateSessionModal" tabindex="-1" aria-labelledby="contestSessionLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -38,8 +44,8 @@
                     <hr class="my-4">
                     <div class="row g-3 mb-4">
                         <div class="col-md-6">
-                            <label for="session_start" class="form-label"><?= __("Start Date/Time") ?> <span class="text-danger">*</span></label>
-                            <input type="datetime-local" class="form-control" id="session_start" name="session_start" required value="<?php if (isset($session_info)) echo htmlspecialchars(str_replace(' ', 'T', substr($session_info['time_start'], 0, 16))); ?>">
+                            <label for="session_start" class="form-label"><?= __("Start Date/Time") ?> <span class="text-danger">*</span> <small class="text-muted"><?= ($session_modal_localtime_usage === '1') ? __("(Local)") : __("(UTC)"); ?></small></label>
+                            <input type="datetime-local" class="form-control" id="session_start" name="session_start" required value="<?php if (isset($session_info)) echo htmlspecialchars(display_qso_date($session_info['time_start']) . 'T' . display_qso_time($session_info['time_start'])); ?>">
                             <small class="text-muted d-block mt-2"><?= __("When should the session start?"); ?></small>
                             <div class="mt-2 d-flex gap-1">
                                 <button type="button" class="btn btn-sm btn-primary" id="preset_start_now"><?= __("Now") ?></button>
@@ -48,8 +54,8 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <label for="session_end" class="form-label"><?= __("End Date/Time") ?> <span class="text-danger">*</span></label>
-                            <input type="datetime-local" class="form-control" id="session_end" name="session_end" required value="<?php if (isset($session_info)) echo htmlspecialchars(str_replace(' ', 'T', substr($session_info['time_end'], 0, 16))); ?>">
+                            <label for="session_end" class="form-label"><?= __("End Date/Time") ?> <span class="text-danger">*</span> <small class="text-muted"><?= ($session_modal_localtime_usage === '1') ? __("(Local)") : __("(UTC)"); ?></small></label>
+                            <input type="datetime-local" class="form-control" id="session_end" name="session_end" required value="<?php if (isset($session_info)) echo htmlspecialchars(display_qso_date($session_info['time_end']) . 'T' . display_qso_time($session_info['time_end'])); ?>">
                             <small class="text-muted d-block mt-2"><?= __("When should the session end?"); ?></small>
                             <div class="mt-2 d-flex gap-1">
                                 <button type="button" class="btn btn-sm btn-primary" id="preset_end_4h">+4h</button>
@@ -169,7 +175,16 @@
 </div>
 <script>
 (function () {
+    // Whether the Start/End boxes below represent the user's local time or plain UTC.
+    var localtimeUsage = "<?php echo $session_modal_localtime_usage; ?>";
+    var timezoneOffset = <?php echo $session_modal_timezone_offset; ?>;
+
+    // Formats a UTC-anchored Date into the box's value string, shifting by the
+    // configured offset first when the box represents local time.
     function formatDatetimeLocal(d) {
+        if (localtimeUsage === '1') {
+            d = new Date(d.getTime() + timezoneOffset * 1000);
+        }
         return d.getUTCFullYear() + '-' +
             String(d.getUTCMonth() + 1).padStart(2, '0') + '-' +
             String(d.getUTCDate()).padStart(2, '0') + 'T' +
@@ -177,6 +192,9 @@
             String(d.getUTCMinutes()).padStart(2, '0');
     }
 
+    // Contest start times are conventionally quoted in UTC (e.g. "Friday 1200Z"),
+    // so the anchor point stays UTC regardless of display preference; only the
+    // box's rendered string is shifted to the user's local time above.
     function nextWeekday(dayOfWeek, hour) {
         var now = new Date();
         var d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), hour, 0, 0));
@@ -195,12 +213,21 @@
         document.getElementById('session_start').value = formatDatetimeLocal(nextWeekday(6, 12));
     });
 
+    // The box's value is a fixed offset away from UTC regardless of which
+    // timezone it represents, so adding hours directly to it is safe either way
+    // (Wavelog's per-user timezones are fixed GMT offsets, no DST to trip over).
     function addHoursToStart(hours) {
         var startVal = document.getElementById('session_start').value;
         if (!startVal) return;
+        // startVal is already in "box units" (shifted to local if applicable), so treat it
+        // as a plain timestamp and add hours directly -- do not re-apply the offset.
         var d = new Date(startVal + ':00Z');
         d.setUTCHours(d.getUTCHours() + hours);
-        document.getElementById('session_end').value = formatDatetimeLocal(d);
+        document.getElementById('session_end').value = d.getUTCFullYear() + '-' +
+            String(d.getUTCMonth() + 1).padStart(2, '0') + '-' +
+            String(d.getUTCDate()).padStart(2, '0') + 'T' +
+            String(d.getUTCHours()).padStart(2, '0') + ':' +
+            String(d.getUTCMinutes()).padStart(2, '0');
     }
 
     document.getElementById('preset_end_4h').addEventListener('click', function () { addHoursToStart(4); });
