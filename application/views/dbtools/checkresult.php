@@ -101,7 +101,7 @@ function check_dxcc($result, $custom_date_format) { ?>
 								<tr id="qsoID-<?php echo $qso['id']; ?>">
 									<td><div class="form-check"><input class="row-check form-check-input mt-1" type="checkbox" /></div></td>
 									<td><?php echo '<a id="edit_qso" href="javascript:displayQso(' . $qso['id'] . ')">' . htmlspecialchars($qso['callsign']) . '</a>'; ?></td>
-									<td><?php echo date($custom_date_format, strtotime($qso['qso_date'])); ?></td>
+									<td><?php echo display_qso_date($qso['qso_date']); ?></td>
 									<td ><?php if($qso['sat_name'] != '') { echo html_escape($qso['sat_name']); } else { echo html_escape(strtolower($qso['band'])); }; ?></td>
 									<td><?php echo htmlspecialchars($qso['submode'] ? $qso['submode'] : $qso['mode']); ?></td>
 									<td style='text-align: center'><div class="<?php echo $qso['lotw_qsl_rcvd'] == 'Y' ? 'bg-success' : 'bg-danger'; ?>"><?php echo $qso['lotw_qsl_rcvd'] == 'Y' ? __('Yes') : __('No'); ?></div></td>
@@ -160,7 +160,7 @@ function check_incorrect_gridsquares($result, $custom_date_format) { ?>
 						<?php foreach ($result as $qso): ?>
 								<tr id="qsoID-<?php echo $qso->col_primary_key; ?>">
 									<td><?php echo '<a id="edit_qso" href="javascript:displayQso(' . (int) $qso->col_primary_key . ')">' . htmlspecialchars($qso->col_call) . '</a>'; ?></td>
-									<td><?php echo date($custom_date_format, strtotime($qso->col_time_on)); ?></td>
+									<td><?php echo display_qso_date($qso->col_time_on); ?></td>
 									<td ><?php if($qso->col_sat_name != null) { echo html_escape($qso->col_sat_name); } else { echo html_escape(strtolower($qso->col_band)); }; ?></td>
 									<td><?php echo htmlspecialchars($qso->col_submode ? $qso->col_submode : $qso->col_mode); ?></td>
 									<td style='text-align: center'><div class="<?php echo $qso->col_lotw_qsl_rcvd == 'Y' ? 'bg-success' : 'bg-danger'; ?>"><?php echo $qso->col_lotw_qsl_rcvd == 'Y' ? __('Yes') : __('No'); ?></div></td>
@@ -245,8 +245,8 @@ function check_incorrect_cq_zones($result, $custom_date_format) { ?>
 			echo '<tr id="qsoID-'. $qso->COL_PRIMARY_KEY .'">';
 			echo '<td><div class="form-check"><input class="row-check form-check-input mt-1" type="checkbox" /></div></td>';
 			echo '<td style=\'text-align: center\'><a id="edit_qso" class="callsign" href="javascript:displayQso(' . (int) $qso->COL_PRIMARY_KEY . ')">' . html_escape(strtoupper($qso->COL_CALL)) . '</a></td>';
-			echo '<td style=\'text-align: center\'>'; $timestamp = strtotime($qso->COL_TIME_ON); echo date($custom_date_format, $timestamp); echo '</td>';
-			echo '<td style=\'text-align: center\'>'; $timestamp = strtotime($qso->COL_TIME_ON); echo date('H:i', $timestamp); echo '</td>';
+			echo '<td style=\'text-align: center\'>'; echo display_qso_date($qso->COL_TIME_ON); echo '</td>';
+			echo '<td style=\'text-align: center\'>'; echo display_qso_time($qso->COL_TIME_ON); echo '</td>';
 			echo '<td style=\'text-align: center\'>'; echo $qso->COL_SUBMODE==null?html_escape($qso->COL_MODE):html_escape($qso->COL_SUBMODE); echo '</td>';
 			echo '<td style=\'text-align: center\'>'; if($qso->COL_SAT_NAME != null) { echo html_escape($qso->COL_SAT_NAME); } else { echo html_escape(strtolower($qso->COL_BAND)); }; echo '</td>';
 			echo '<td style=\'text-align: center\'>'; echo html_escape(strlen($qso->COL_GRIDSQUARE ?? '')==0?$qso->COL_VUCC_GRIDS:$qso->COL_GRIDSQUARE); echo '</td>';
@@ -321,8 +321,8 @@ function check_incorrect_itu_zones($result, $custom_date_format) { ?>
 			echo '<tr id="qsoID-'. $qso->COL_PRIMARY_KEY .'">';
 			echo '<td><div class="form-check"><input class="row-check form-check-input mt-1" type="checkbox" /></div></td>';
 			echo '<td style=\'text-align: center\'><a id="edit_qso" class="callsign" href="javascript:displayQso(' . (int) $qso->COL_PRIMARY_KEY . ')">' . html_escape(strtoupper($qso->COL_CALL)) . '</a></td>';
-			echo '<td style=\'text-align: center\'>'; $timestamp = strtotime($qso->COL_TIME_ON); echo date($custom_date_format, $timestamp); echo '</td>';
-			echo '<td style=\'text-align: center\'>'; $timestamp = strtotime($qso->COL_TIME_ON); echo date('H:i', $timestamp); echo '</td>';
+			echo '<td style=\'text-align: center\'>'; echo display_qso_date($qso->COL_TIME_ON); echo '</td>';
+			echo '<td style=\'text-align: center\'>'; echo display_qso_time($qso->COL_TIME_ON); echo '</td>';
 			echo '<td style=\'text-align: center\'>'; echo $qso->COL_SUBMODE==null?html_escape($qso->COL_MODE):html_escape($qso->COL_SUBMODE); echo '</td>';
 			echo '<td style=\'text-align: center\'>'; if($qso->COL_SAT_NAME != null) { echo html_escape($qso->COL_SAT_NAME); } else { echo html_escape(strtolower($qso->COL_BAND)); }; echo '</td>';
 			echo '<td style=\'text-align: center\'>'; echo html_escape(strlen($qso->COL_GRIDSQUARE ?? '')==0?$qso->COL_VUCC_GRIDS:$qso->COL_GRIDSQUARE); echo '</td>';
@@ -387,7 +387,7 @@ function check_iota($result, $custom_date_format) { ?>
 						<?php foreach ($result as $qso): ?>
 								<tr id="qsoID-<?php echo $qso->col_primary_key; ?>">
 									<td><?php echo '<a id="edit_qso" href="javascript:displayQso(' . (int) $qso->col_primary_key . ')">' . htmlspecialchars($qso->col_call) . '</a>'; ?></td>
-									<td><?php echo date($custom_date_format, strtotime($qso->col_time_on)); ?></td>
+									<td><?php echo display_qso_date($qso->col_time_on); ?></td>
 									<td ><?php if($qso->col_sat_name != null) { echo html_escape($qso->col_sat_name); } else { echo html_escape(strtolower($qso->col_band)); }; ?></td>
 									<td><?php echo htmlspecialchars($qso->col_submode ? $qso->col_submode : $qso->col_mode); ?></td>
 									<td style='text-align: center'><div class="<?php echo $qso->col_lotw_qsl_rcvd == 'Y' ? 'bg-success' : 'bg-danger'; ?>"><?php echo $qso->col_lotw_qsl_rcvd == 'Y' ? __('Yes') : __('No'); ?></div></td>

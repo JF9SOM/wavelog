@@ -53,8 +53,8 @@
 	
 	<tr>
 		<td style="text-align: center"><?php echo $i--; ?></td>
-		<td style="text-align: center"><?php $timestamp = strtotime($row->time); echo date($custom_date_format, $timestamp); ?></td>
-		<td style="text-align: center"><?php $timestamp = strtotime($row->time); echo date('H:i', $timestamp); ?></td>
+		<td style="text-align: center"><?php echo display_qso_date($row->time); ?></td>
+		<td style="text-align: center"><?php echo display_qso_time($row->time); ?></td>
       <td style="text-align: center" class="callsign"><a href="javascript:displayQso(<?= $row->pkey; ?>)"><?php echo $row->callsign; ?></a></td>
 		<td style="text-align: center"><?php echo $row->mode; ?></td>
 		<td style="text-align: center"><?php echo $row->rst_r; ?></td>

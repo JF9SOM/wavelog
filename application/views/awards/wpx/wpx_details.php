@@ -25,14 +25,12 @@ if ($this->session->userdata('user_date_format')) {
             </tr>
         </thead>
         <tbody>
-        <?php foreach ($results as $qso):
-					$qsotimestamp = strtotime($qso->col_time_on);
-			?>
+        <?php foreach ($results as $qso): ?>
             <tr>
 				<td><?php echo $i++; ?></td>
 			<td class="callsign"><?php echo html_escape($qso->wpx_prefix); ?></td>
 			<td><a class="callsign" href="javascript:displayQso(<?php echo (int) $qso->col_primary_key; ?>)"><?php echo html_escape($qso->col_call); ?></a></td>
-				<td><?php echo date($custom_date_format, $qsotimestamp) . ' ' . date('H:i', $qsotimestamp); ?></td>
+				<td><?php echo display_qso_date($qso->col_time_on) . ' ' . display_qso_time($qso->col_time_on); ?></td>
 <td><?php echo html_escape(getFormattedBand($qso->col_band, $qso->col_sat_name)); ?></td>
 			<td><?php echo html_escape((($qso->col_submode ?? '') == '') ? $qso->col_mode : $qso->col_submode); ?></td>
 				<td><?php echo cf_type($qso->col_qsl_rcvd, $qso->col_lotw_qsl_rcvd, $qso->col_eqsl_qsl_rcvd, $qso->COL_QRZCOM_QSO_DOWNLOAD_STATUS, $qso->COL_CLUBLOG_QSO_DOWNLOAD_STATUS); ?></td>

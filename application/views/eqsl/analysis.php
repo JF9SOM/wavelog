@@ -44,9 +44,8 @@ $custom_date_format = $this->session->userdata('user_date_format');
 					</tr>
 					<?php foreach ($import['qsos'] as $qso) { ?>
 						<tr>
-							<?php $timestamp = strtotime($qso['date']); ?>
-							<td><?php echo date($custom_date_format, $timestamp) ?></td>
-							<td><?php echo date('H:i', $timestamp); ?></td>
+							<td><?php echo display_qso_date($qso['date']) ?></td>
+							<td><?php echo display_qso_time($qso['date']); ?></td>
 							<?php if ($qso['status'] == "Found") { ?>
 								<td><a id="view_eqsl_qso" href="javascript:displayQso(<?php echo $qso['qsoid']; ?>)"><?php echo $qso['call']; ?></a></td>
 							<?php } else { ?>
@@ -55,9 +54,9 @@ $custom_date_format = $this->session->userdata('user_date_format');
 							<td><?php echo $qso['mode']; ?></td>
 							<td><?php echo $qso['submode']; ?></td>
 							<?php if ($qso['status'] == "Found") { ?>
-								<td><a href="<?php echo site_url("eqsl/image/".$qso['qsoid']); ?>" data-fancybox="images" data-width="528" data-height="336"><?php echo date ($custom_date_format, strtotime($qso['eqsl_qslrdate'])); ?></a></td>
+								<td><a href="<?php echo site_url("eqsl/image/".$qso['qsoid']); ?>" data-fancybox="images" data-width="528" data-height="336"><?php echo display_qsl_date($qso['eqsl_qslrdate']); ?></a></td>
 							<?php } else { ?>
-								<td><?php echo date ($custom_date_format, strtotime($qso['eqsl_qslrdate'])); ?></td>
+								<td><?php echo display_qsl_date($qso['eqsl_qslrdate']); ?></td>
 							<?php } ?>
 							<td><?php echo $qso['status']; ?></td>
 							<td><?php echo $qso['eqsl_status']; ?></td>

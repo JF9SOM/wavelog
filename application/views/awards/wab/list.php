@@ -14,7 +14,6 @@
 			</thead>
 			<tbody>
 				<?php foreach ($qsos as $qso) {
-					$ts = strtotime($qso->col_time_on);
 					$letters = '';
 					if ($qso->col_qsl_rcvd == 'Y') { $letters .= 'Q'; }
 					if ($qso->col_lotw_qsl_rcvd == 'Y') { $letters .= 'L'; }
@@ -27,7 +26,7 @@
 					<td><?php echo '<a href=\'javascript:displayContacts(' . js_escape($qso->col_sig_info) . ',' . js_escape($postdata['band']) . ',' . js_escape($postdata['sat']) . ',' . js_escape($postdata['orbit']) . ',' . js_escape($postdata['mode']) . ',"WAB")\'>' . html_escape($qso->col_sig_info) . '</a>'; ?></td>
 					<td><?= $qso->col_gridsquare != '' ? html_escape($qso->col_gridsquare) : '&mdash;'; ?></td>
 					<td><a class="callsign" href="javascript:displayQso(<?= (int) $qso->col_primary_key; ?>)"><?= html_escape($qso->col_call); ?></a></td>
-					<td data-order="<?= html_escape($qso->col_time_on); ?>"><?= html_escape(date($date_format, $ts) . ' ' . date('H:i', $ts)); ?></td>
+					<td data-order="<?= html_escape($qso->col_time_on); ?>"><?= html_escape(display_qso_date($qso->col_time_on) . ' ' . display_qso_time($qso->col_time_on)); ?></td>
 					<td><?php if (($qso->col_sat_name ?? '') != '') { // sat QSOs: show the satellite instead of the bare 'SAT' band
 						echo '<a href="https://db.satnogs.org/search/?q=' . html_escape($qso->col_sat_name) . '" target="_blank">' . html_escape($qso->col_sat_name) . '</a>';
 					} else {

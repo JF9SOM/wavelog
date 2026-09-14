@@ -90,8 +90,8 @@ if ($result) { ?>
 							</span>
 						</div>
 					</td>
-					<td><?php echo date($custom_date_format, strtotime($qso['qso_date'])); ?></td>
-					<td><?php echo date('H:i', strtotime($qso['qso_date'])); ?></td>
+					<td><?php echo display_qso_date($qso['qso_date']); ?></td>
+					<td><?php echo display_qso_time($qso['qso_date']); ?></td>
 					<td><?php echo $qso['station_profile']; ?></td>
 					<td>
 						<div class="d-flex align-items-center justify-content-between">

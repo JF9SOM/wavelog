@@ -247,10 +247,9 @@ function write_dxcc_timeline($timeline_array, $custom_date_format, $bandselect, 
                 <tbody>';
 
     foreach ($filtered_timeline as $line) {
-        $date_as_timestamp = strtotime($line->date ?? '1970-01-01 00:00:00');
         echo '<tr>
                 <td>' . $i-- . '</td>
-                <td>' . date($custom_date_format, $date_as_timestamp) . '</td>';
+                <td>' . display_qso_date($line->date ?? '1970-01-01 00:00:00') . '</td>';
         if ($confirm) { write_confirm_cell($line, $custom_date_format); }
         echo '                <td class="callsign">' . $line->prefix . '</td>
                 <td>' . ucwords(strtolower($line->dxcc_name)) . '</td>';
@@ -289,11 +288,9 @@ function write_waja_timeline($timeline_array, $custom_date_format, $bandselect, 
                 <tbody>';
 
     foreach ($filtered_timeline as $line) {
-        $date_as_timestamp = strtotime($line->date);
-
         echo '<tr>
                 <td>' . $i-- . '</td>
-                <td>' . date($custom_date_format, $date_as_timestamp) . '</td>';
+                <td>' . display_qso_date($line->date) . '</td>';
         if ($confirm) { write_confirm_cell($line, $custom_date_format); }
         echo '                <td>' . html_escape($CI->Waja->jaPrefectures[$line->col_state]) . ' ('.html_escape($line->col_state).')</td>';
         if ($propmode == 'SAT' || $propmode == 'All') {
@@ -324,11 +321,9 @@ function write_was_timeline($timeline_array, $custom_date_format, $bandselect, $
                 <tbody>';
 
     foreach ($filtered_timeline as $line) {
-        $date_as_timestamp = strtotime($line->date);
-
         echo '<tr>
                 <td>' . $i-- . '</td>
-                <td>' . date($custom_date_format, $date_as_timestamp) . '</td>';
+                <td>' . display_qso_date($line->date) . '</td>';
         if ($confirm) { write_confirm_cell($line, $custom_date_format); }
         echo '                <td>' . html_escape($line->col_state) . '</td>';
         if ($propmode == 'SAT' || $propmode == 'All') {
@@ -363,11 +358,9 @@ function write_iota_timeline($timeline_array, $custom_date_format, $bandselect, 
                 <tbody>';
 
     foreach ($filtered_timeline as $line) {
-        $date_as_timestamp = strtotime($line->date);
-
         echo '<tr>
                 <td>' . $i-- . '</td>
-                <td>' . date($custom_date_format, $date_as_timestamp) . '</td>';
+                <td>' . display_qso_date($line->date) . '</td>';
         if ($confirm) { write_confirm_cell($line, $custom_date_format); }
         echo '                <td>' . html_escape($line->col_iota) . '</td>
                 <td>' . $line->name . '</td>
@@ -400,11 +393,9 @@ function write_waz_timeline($timeline_array, $custom_date_format, $bandselect, $
                 <tbody>';
 
     foreach ($filtered_timeline as $line) {
-        $date_as_timestamp = strtotime($line->date);
-
         echo '<tr>
                 <td>' . $i-- . '</td>
-                <td>' . date($custom_date_format, $date_as_timestamp) . '</td>';
+                <td>' . display_qso_date($line->date) . '</td>';
         if ($confirm) { write_confirm_cell($line, $custom_date_format); }
         echo '                <td>' . $line->col_cqz . '</td>';
         if ($propmode == 'SAT' || $propmode == 'All') {
@@ -435,13 +426,12 @@ function write_vucc_timeline($timeline_array, $custom_date_format, $bandselect, 
                 <tbody>';
 
     foreach ($filtered_timeline as $line) {
-        $date_as_timestamp = strtotime($line['date']);
-
         echo '<tr>
                 <td>' . $i-- . '</td>
-                <td>' . date($custom_date_format, $date_as_timestamp) . '</td>';
+                <td>' . display_qso_date($line['date']) . '</td>';
         if ($confirm) { write_confirm_cell($line, $custom_date_format, true); }
-        echo '                <td>' . html_escape($line['gridsquare']) . '</td>';
+        echo '                <td>' . display_qso_time($line['date']) . '</td>
+                <td>' . html_escape($line['gridsquare']) . '</td>';
         if ($propmode == 'SAT' || $propmode == 'All') {
             echo '<td>'.html_escape($line['sat_name']).'</td>';
         }

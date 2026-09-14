@@ -39,8 +39,8 @@ if ($qsos->result() != NULL) {
 	foreach ($qsos->result() as $qsl) {
 		echo '<tr id ="qsolist_'.$qsl->COL_PRIMARY_KEY.'">';
 		echo '<td style=\'text-align: center\'>' . html_escape($qsl->COL_CALL) . '</td>';
-		echo '<td style=\'text-align: center\'>'; $timestamp = strtotime($qsl->COL_TIME_ON); echo date($custom_date_format, $timestamp); echo '</td>';
-		echo '<td style=\'text-align: center\'>'; $timestamp = strtotime($qsl->COL_TIME_ON); echo date('H:i', $timestamp); echo '</td>';
+		echo '<td style=\'text-align: center\'>'; echo display_qso_date($qsl->COL_TIME_ON); echo '</td>';
+		echo '<td style=\'text-align: center\'>'; echo display_qso_time($qsl->COL_TIME_ON); echo '</td>';
 		echo '<td style=\'text-align: center\'>'; echo $qsl->COL_SUBMODE==null?html_escape($qsl->COL_MODE):html_escape($qsl->COL_SUBMODE); echo '</td>';
 		echo '<td style=\'text-align: center\'>'; if($qsl->COL_SAT_NAME != null) {
 			$band_rx = strtolower($qsl->COL_BAND_RX ?? '');
@@ -75,7 +75,7 @@ if ($qsos->result() != NULL) {
 		echo '<span ';
 		if ($qsl->COL_QSL_SENT != "N") {
 			if ($qsl->COL_QSLSDATE != null) {
-				$timestamp = ' '.date($custom_date_format, strtotime($qsl->COL_QSLSDATE));
+				$timestamp = ' ' . display_qsl_date($qsl->COL_QSLSDATE);
 			} else {
 				$timestamp = '';
 			}
@@ -117,7 +117,7 @@ if ($qsos->result() != NULL) {
 		echo '<span ';
 		if ($qsl->COL_QSL_RCVD != "N") {
 			if ($qsl->COL_QSLRDATE != null) {
-				$timestamp = ' '.date($custom_date_format, strtotime($qsl->COL_QSLRDATE));
+				$timestamp = ' ' . display_qsl_date($qsl->COL_QSLRDATE);
 			} else {
 				$timestamp = '';
 			}
@@ -163,8 +163,7 @@ if ($qsos->result() != NULL) {
 			if ($qsl->COL_EQSL_QSL_SENT == "Y") {
 				echo "title=\"".__("eQSL")." ".__("Sent");
 				if ($qsl->COL_EQSL_QSLSDATE != null) {
-					$timestamp = strtotime($qsl->COL_EQSL_QSLSDATE);
-					echo " ".($timestamp != '' ? date($custom_date_format, $timestamp) : '');
+					echo " " . display_qsl_date($qsl->COL_EQSL_QSLSDATE);
 				}
 				echo "\" data-bs-toggle=\"tooltip\"";
 			}
@@ -176,8 +175,7 @@ if ($qsos->result() != NULL) {
 			if ($qsl->COL_EQSL_QSL_RCVD == "Y") {
 				echo "title=\"".__("eQSL")." ".__("Received");
 				if ($qsl->COL_EQSL_QSLRDATE != null) {
-					$timestamp = strtotime($qsl->COL_EQSL_QSLRDATE);
-					echo " ".($timestamp != '' ? date($custom_date_format, $timestamp) : '');
+					echo " " . display_qsl_date($qsl->COL_EQSL_QSLRDATE);
 				}
 				echo "\" data-bs-toggle=\"tooltip\"";
 			}
@@ -192,8 +190,7 @@ if ($qsos->result() != NULL) {
 			if ($qsl->COL_LOTW_QSL_SENT == "Y") {
 				echo "title=\"".__("LoTW")." ".__("Sent");
 				if ($qsl->COL_LOTW_QSLSDATE != null) {
-					$timestamp = strtotime($qsl->COL_LOTW_QSLSDATE);
-					echo " ".($timestamp != '' ? date($custom_date_format, $timestamp) : '');
+					echo " " . display_qsl_date($qsl->COL_LOTW_QSLSDATE);
 				}
 				echo "\" data-bs-toggle=\"tooltip\" class=\"lotw-green\"";
 			} elseif ($qsl->COL_LOTW_QSL_SENT == "I") {
@@ -207,8 +204,7 @@ if ($qsos->result() != NULL) {
 			if ($qsl->COL_LOTW_QSL_RCVD == "Y") {
 				echo "title=\"".__("LoTW")." ".__("Received");
 				if ($qsl->COL_LOTW_QSLRDATE) {
-					$timestamp = strtotime($qsl->COL_LOTW_QSLRDATE);
-					echo " ".($timestamp != '' ? date($custom_date_format, $timestamp) : '');
+					echo " " . display_qsl_date($qsl->COL_LOTW_QSLRDATE);
 				}
 				echo "\" data-bs-toggle=\"tooltip\" class=\"lotw-green\"";
 			} elseif ($qsl->COL_LOTW_QSL_RCVD == "I") {

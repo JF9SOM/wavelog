@@ -80,8 +80,8 @@ if ($qsos->result() != NULL) { ?>
 					</span>
 				</span>
 			</td><?php
-		echo '<td style=\'text-align: center\'>'; $timestamp = strtotime($qsl->COL_TIME_ON); echo date($custom_date_format, $timestamp); echo '</td>';
-		echo '<td style=\'text-align: center\'>'; $timestamp = strtotime($qsl->COL_TIME_ON); echo date('H:i', $timestamp); echo '</td>';
+		echo '<td style=\'text-align: center\'>'; echo display_qso_date($qsl->COL_TIME_ON); echo '</td>';
+		echo '<td style=\'text-align: center\'>'; echo display_qso_time($qsl->COL_TIME_ON); echo '</td>';
 		echo '<td style=\'text-align: center\'>'; echo $qsl->COL_SUBMODE==null?html_escape($qsl->COL_MODE):html_escape($qsl->COL_SUBMODE); echo '</td>';
 		echo '<td class=\'col-band\' style=\'text-align: center\'>'; if($qsl->COL_SAT_NAME != null) { echo __("SAT") . ' ' . html_escape($qsl->COL_SAT_NAME) . ' '. html_escape(strtolower($qsl->COL_BAND)) . '/' . html_escape(strtolower($qsl->COL_BAND_RX)); } else { echo html_escape(strtolower($qsl->COL_BAND)); }; echo '</td>';
 		echo '<td class=\'col-freq\' style=\'text-align: center;display:none;\'>'; if($qsl->COL_SAT_NAME != null) { echo __("SAT") . ' ' . html_escape($qsl->COL_SAT_NAME) . ' ' . $ci->frequency->qrg_conversion($qsl->frequency) . '/' . $ci->frequency->qrg_conversion($qsl->frequency_rx); } else { echo $ci->frequency->qrg_conversion($qsl->frequency); }; echo '</td>';

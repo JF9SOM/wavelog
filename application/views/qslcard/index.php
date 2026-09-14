@@ -43,7 +43,7 @@
         <th style=\'text-align: center\'>'.__("Callsign").'</th>
         <th style=\'text-align: center\'>'.__("Mode").'</th>
         <th style=\'text-align: center\'>'.__("Date").'</th>
-        <th style=\'text-align: center\'>'.__("Time").'</th>
+        <th style=\'text-align: center\'>'.(display_qso_time_label() === 'local' ? __("Localtime") : __("Time")).'</th>
         <th style=\'text-align: center\'>'.__("Band").'</th>
         <th style=\'text-align: center\'>'.__("QSL Date").'</th>
         <th style=\'text-align: center\'></th>
@@ -59,12 +59,10 @@
 				echo $qsl->COL_SUBMODE == null ? html_escape($qsl->COL_MODE) : html_escape($qsl->COL_SUBMODE);
 				echo '</td>';
 				echo '<td style=\'text-align: center\'>';
-				$timestamp = strtotime($qsl->COL_TIME_ON);
-				echo date($custom_date_format, $timestamp);
+				echo display_qso_date($qsl->COL_TIME_ON);
 				echo '</td>';
 				echo '<td style=\'text-align: center\'>';
-				$timestamp = strtotime($qsl->COL_TIME_ON);
-				echo date('H:i', $timestamp);
+				echo display_qso_time($qsl->COL_TIME_ON);
 				echo '</td>';
 				echo '<td style=\'text-align: center\'>';
 				if ($qsl->COL_SAT_NAME != null) {
@@ -74,8 +72,7 @@
 				};
 				echo '</td>';
 				echo '<td style=\'text-align: center\'>';
-				$timestamp = strtotime($qsl->COL_QSLRDATE ?? '');
-				echo date($custom_date_format, $timestamp);
+				echo display_qsl_date($qsl->COL_QSLRDATE);
 				echo '</td>';
 				echo '<td id="'.$qsl->id.'" style=\'text-align: center\'><button onclick="deleteQsl(\''.$qsl->id.'\')" class="btn btn-sm btn-danger">' . __("Delete") . '</button></td>';
 				echo '<td style=\'text-align: center\'><button onclick="viewQsl(\''.$qsl->filename.'\', \''.html_escape($qsl->COL_CALL).'\')" class="btn btn-sm btn-success">' . __("View") . '</button></td>';
@@ -94,11 +91,7 @@
 			<?php if (is_array($qslarray->result())): ?>
 				<?php foreach ($qslarray->result() as $qsl): ?>
 					<?php
-					$qslDate = null;
-					$timestamp = strtotime($qsl->COL_TIME_ON);
-					if (!empty($qsl->COL_QSLRDATE)) {
-						$qslDate = date($custom_date_format, strtotime($qsl->COL_QSLRDATE));
-					}
+					$qslDate = display_qsl_date($qsl->COL_QSLRDATE);
 					$band = ($qsl->COL_SAT_NAME != null) ? $qsl->COL_SAT_NAME : strtolower($qsl->COL_BAND);
 					$mode = $qsl->COL_SUBMODE == null ? $qsl->COL_MODE : $qsl->COL_SUBMODE;
 
@@ -120,7 +113,7 @@
 							<h5 class="card-title callsign"><?= html_escape($qsl->COL_CALL) ?></h5>
 								<p class="card-text">
 									<?= html_escape($mode) ?> | <?= html_escape($band) ?><br>
-									<?= date($custom_date_format, $timestamp) ?> <?= date('H:i', $timestamp) ?><br>
+									<?= display_qso_date($qsl->COL_TIME_ON) ?> <?= display_qso_time($qsl->COL_TIME_ON) ?><br>
 									<?= $qslDate == '' ? '' : __("QSL Date") . ': ' . $qslDate ?>
 								</p>
 							</div>

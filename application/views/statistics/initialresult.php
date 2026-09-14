@@ -25,11 +25,10 @@ if ($intials_array) {
                 <tbody>';
 		$i = 1;
 	foreach ($intials_array as $line) {
-        $date_as_timestamp = strtotime($line->col_time_on ?? '1970-01-01 00:00:00');
         echo '<tr>
                 <td>' . $i++ . '</td>
-                <td>' . date($custom_date_format, $date_as_timestamp) . '</td>
-                <td>' . date('H:i', $date_as_timestamp) . '</td>
+                <td>' . display_qso_date($line->col_time_on ?? '1970-01-01 00:00:00') . '</td>
+                <td>' . display_qso_time($line->col_time_on ?? '1970-01-01 00:00:00') . '</td>
                 <td class="callsign"><a href=javascript:displayQso(' . $line->col_primary_key . ')>' . $line->col_call . '</a></td>
                 <td>' . $line->col_band . '</td>
                 <td>' . (empty($line->col_submode) ? ($line->col_mode ?? '') : $line->col_submode) . '</td>

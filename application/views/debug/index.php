@@ -819,10 +819,8 @@
                                     foreach ($qsos_with_no_station_id as $qso) {
                                         echo '<tr>';
                                         echo '<td><input type="checkbox" id="' . $qso->COL_PRIMARY_KEY . '" name="cBox[]" value="' . $qso->COL_PRIMARY_KEY . '"></td>';
-                                        $timestamp = strtotime($qso->COL_TIME_ON);
-                                        echo '<td>' . date($custom_date_format, $timestamp) . '</td>';
-                                        $timestamp = strtotime($qso->COL_TIME_ON);
-                                        echo '<td>' . date('H:i', $timestamp) . '</td>';
+                                        echo '<td>' . display_qso_date($qso->COL_TIME_ON) . '</td>';
+                                        echo '<td>' . display_qso_time($qso->COL_TIME_ON) . '</td>';
                                         echo '<td>' . html_escape($qso->COL_CALL) . '</td>';
                                         echo '<td>' . html_escape($qso->COL_MODE) . '</td>';
                                         echo '<td>' . html_escape($qso->COL_BAND) . '</td>';

@@ -25,10 +25,10 @@ if ($qsos->result() != NULL) {
 	foreach ($qsos->result() as $qso) {
 		echo '<tr>';
 		echo '<td style=\'text-align: center\'><form id="searchcall_'.$i.'" method="POST" action="'.site_url('search'). '"><input type="hidden" value="'. html_escape(strtoupper($qso->COL_CALL)) .'" name="callsign"><a href="javascript:$(\'#searchcall_'.$i++.'\').submit()">' . html_escape($qso->COL_CALL) . '</a></form></td>';
-		echo '<td style=\'text-align: center\'>' . $qso->COL_TIME_ON . '</td>';
+		echo '<td style=\'text-align: center\'>' . display_qso_datetime($qso->COL_TIME_ON) . '</td>';
 		echo '<td style=\'text-align: center\'>'; echo $qso->COL_SUBMODE==null?html_escape($qso->COL_MODE):html_escape($qso->COL_SUBMODE); echo '</td>';
 		echo '<td style=\'text-align: center\'>'; if($qso->COL_SAT_NAME != null) { echo html_escape($qso->COL_SAT_NAME); } else { echo html_escape(strtolower($qso->COL_BAND)); }; echo '</td>';
-		echo '<td style=\'text-align: center\'>' . $qso->lastupload . '</td>';
+		echo '<td style=\'text-align: center\'>' . display_qso_date($qso->lastupload) . ' ' . display_qso_time($qso->lastupload) . '</td>';
 		echo '<td style=\'text-align: center\'><span class="badge text-bg-light">' . $qso->station_callsign . '</span></td>';
 		echo '</tr>';
 	}

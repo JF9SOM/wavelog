@@ -199,7 +199,7 @@ function getDistance($distance) {
                        } elseif ($diff > 7) {
                           $lotw_hint = ' lotw_info_yellow';
                        }
-                       $timestamp = strtotime($row->lastupload); echo ($row->callsign == '' ? '' : ' <a id="lotw_badge" style="float: right; user-select: none;" href="https://lotw.arrl.org/lotwuser/act?act='.html_escape($row->COL_CALL).'" target="_blank"><small id="lotw_info" class="badge text-bg-success'.$lotw_hint.'" data-bs-toggle="tooltip" title="LoTW User. Last upload was '.date($custom_date_format." H:i", $timestamp).'">L</small></a>');
+                       echo ($row->callsign == '' ? '' : ' <a id="lotw_badge" style="float: right; user-select: none;" href="https://lotw.arrl.org/lotwuser/act?act='.html_escape($row->COL_CALL).'" target="_blank"><small id="lotw_info" class="badge text-bg-success'.$lotw_hint.'" data-bs-toggle="tooltip" title="LoTW User. Last upload was '.display_qso_date($row->lastupload).' '.display_qso_time($row->lastupload).'">L</small></a>');
                     }
                  ?>
             </td>
@@ -233,7 +233,7 @@ function getDistance($distance) {
                           break;
                        }
                         if ($row->COL_QSLSDATE != null) {
-                            $timestamp = strtotime($row->COL_QSLSDATE); echo " "  .($timestamp != '' ? date($custom_date_format, $timestamp) : '');
+                            echo " " . display_qsl_date($row->COL_QSLSDATE);
                         }
                      } else { echo "class=\"qsl-red"; }
                        if ($row->COL_QSL_SENT_VIA != "") {
@@ -271,7 +271,7 @@ function getDistance($distance) {
                           break;
                        }
                        if ($row->COL_QSLRDATE != null) {
-                            $timestamp = strtotime($row->COL_QSLRDATE); echo " "  .($timestamp != '' ? date($custom_date_format, $timestamp) : '');
+                            echo " " . display_qsl_date($row->COL_QSLRDATE);
                        }
                      } else { echo "class=\"qsl-red"; }
                        if ($row->COL_QSL_RCVD_VIA != "") {
@@ -297,7 +297,7 @@ function getDistance($distance) {
                     <span <?php
                         $timestamp = '';
                         if ($row->COL_EQSL_QSLSDATE != null) {
-                           $timestamp = date($custom_date_format, strtotime($row->COL_EQSL_QSLSDATE));
+                           $timestamp = display_qsl_date($row->COL_EQSL_QSLSDATE);
                         }
                         switch ($row->COL_EQSL_QSL_SENT) {
                            case "Y":
@@ -328,7 +328,7 @@ function getDistance($distance) {
                     <span <?php
                         $timestamp = '';
                         if ($row->COL_EQSL_QSLRDATE != null) {
-                           $timestamp = date($custom_date_format, strtotime($row->COL_EQSL_QSLRDATE));
+                           $timestamp = display_qsl_date($row->COL_EQSL_QSLRDATE);
                         }
                         switch ($row->COL_EQSL_QSL_RCVD) {
                            case "Y":
@@ -364,7 +364,7 @@ function getDistance($distance) {
                     <span <?php
                         $timestamp = '';
                         if ($row->COL_LOTW_QSLSDATE != null) {
-                           $timestamp = date($custom_date_format, strtotime($row->COL_LOTW_QSLSDATE));
+                           $timestamp = display_qsl_date($row->COL_LOTW_QSLSDATE);
                         }
                         switch ($row->COL_LOTW_QSL_SENT) {
                            case "Y":
@@ -395,7 +395,7 @@ function getDistance($distance) {
                     <span <?php
                         $timestamp = '';
                         if ($row->COL_LOTW_QSLRDATE != null) {
-                           $timestamp = date($custom_date_format, strtotime($row->COL_LOTW_QSLRDATE));
+                           $timestamp = display_qsl_date($row->COL_LOTW_QSLRDATE);
                         }
                         switch ($row->COL_LOTW_QSL_RCVD) {
                            case "Y":
@@ -426,7 +426,7 @@ function getDistance($distance) {
                     <span <?php
                         $timestamp = '';
                         if ($row->COL_QRZCOM_QSO_UPLOAD_DATE != null) {
-                           $timestamp = date($custom_date_format, strtotime($row->COL_QRZCOM_QSO_UPLOAD_DATE));
+                           $timestamp = display_qsl_date($row->COL_QRZCOM_QSO_UPLOAD_DATE);
                         }
                         switch ($row->COL_QRZCOM_QSO_UPLOAD_STATUS) {
                            case "Y":
@@ -445,7 +445,7 @@ function getDistance($distance) {
                               echo "\" data-bs-toggle=\"tooltip\" class=\"qrz-yellow\"";
                               break;
                            case "M":
-                              echo 'title="'.__("Modified")."<br />(".__("last sent")." ".date($custom_date_format, strtotime($row->COL_QRZCOM_QSO_UPLOAD_DATE)).")";
+                              echo 'title="'.__("Modified")."<br />(".__("last sent")." ".display_qsl_date($row->COL_QRZCOM_QSO_UPLOAD_DATE).")";
                               echo $timestamp != '' ? " ".$timestamp : '';
                               echo "\" data-bs-toggle=\"tooltip\" data-bs-html=\"true\" class=\"qrz-yellow\"";
                               break;
@@ -457,7 +457,7 @@ function getDistance($distance) {
                     <span <?php
                         $timestamp = '';
                         if ($row->COL_QRZCOM_QSO_DOWNLOAD_STATUS != null && $row->COL_QRZCOM_QSO_DOWNLOAD_DATE != null) {
-                           $timestamp = date($custom_date_format, strtotime($row->COL_QRZCOM_QSO_DOWNLOAD_DATE));
+                           $timestamp = display_qsl_date($row->COL_QRZCOM_QSO_DOWNLOAD_DATE);
                         }
                         switch ($row->COL_QRZCOM_QSO_DOWNLOAD_STATUS) {
                            case "Y":
@@ -483,7 +483,7 @@ function getDistance($distance) {
                     <span <?php
                         $timestamp = '';
                         if ($row->COL_CLUBLOG_QSO_UPLOAD_DATE != null) {
-                           $timestamp = date($custom_date_format, strtotime($row->COL_CLUBLOG_QSO_UPLOAD_DATE));
+                           $timestamp = display_qsl_date($row->COL_CLUBLOG_QSO_UPLOAD_DATE);
                         }
                         switch ($row->COL_CLUBLOG_QSO_UPLOAD_STATUS) {
                            case "Y":
@@ -502,7 +502,7 @@ function getDistance($distance) {
                               echo "\" data-bs-toggle=\"tooltip\" class=\"clublog-yellow\"";
                               break;
                            case "M":
-                              echo 'title="'.__("Modified")."<br />(".__("last sent")." ".date($custom_date_format, strtotime($row->COL_CLUBLOG_QSO_UPLOAD_DATE)).")";
+                              echo 'title="'.__("Modified")."<br />(".__("last sent")." ".display_qsl_date($row->COL_CLUBLOG_QSO_UPLOAD_DATE).")";
                               echo $timestamp != '' ? " ".$timestamp : '';
                               echo "\" data-bs-toggle=\"tooltip\" data-bs-html=\"true\" class=\"clublog-yellow\"";
                               break;
@@ -514,7 +514,7 @@ function getDistance($distance) {
                     <span <?php
                         $timestamp = '';
                         if ($row->COL_CLUBLOG_QSO_DOWNLOAD_STATUS != null && $row->COL_CLUBLOG_QSO_DOWNLOAD_DATE != null) {
-                           $timestamp = date($custom_date_format, strtotime($row->COL_CLUBLOG_QSO_DOWNLOAD_DATE));
+                           $timestamp = display_qsl_date($row->COL_CLUBLOG_QSO_DOWNLOAD_DATE);
                         }
                         switch ($row->COL_CLUBLOG_QSO_DOWNLOAD_STATUS) {
                            case "Y":
@@ -556,7 +556,7 @@ function getDistance($distance) {
                           break;
                        }
                         if (!empty($row->COL_DCL_QSLSDATE)) {
-                            $timestamp = strtotime($row->COL_DCL_QSLSDATE); echo " "  .($timestamp != '' ? date($custom_date_format, $timestamp) : '');
+                            echo " " . display_qsl_date($row->COL_DCL_QSLSDATE);
                         }
                      } else { echo "class=\"qsl-red"; }
                         echo "\">&#9650;</span>"; ?>
@@ -579,7 +579,7 @@ function getDistance($distance) {
                           break;
                        }
                        if (!empty($row->COL_DCL_QSLRDATE)) {
-                            $timestamp = strtotime($row->COL_DCL_QSLRDATE); echo " "  .($timestamp != '' ? date($custom_date_format, $timestamp) : '');
+                            echo " " . display_qsl_date($row->COL_DCL_QSLRDATE);
                        }
                      } else { echo "class=\"qsl-red"; }
                         echo "\">&#9660;</span>"; ?>

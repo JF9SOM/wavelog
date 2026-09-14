@@ -83,8 +83,8 @@ if ($count == 0) { ?>
 				?>
 				<tr>
 					<td><?php echo ++$i; ?></td>
-					<td><?php echo date($custom_date_format, strtotime($row->COL_TIME_ON)); ?></td>
-					<?php if ($show_time) { ?><td><?php echo date('H:i', strtotime($row->COL_TIME_ON)); ?></td><?php } ?>
+					<td><?php echo display_qso_date($row->COL_TIME_ON); ?></td>
+					<?php if ($show_time) { ?><td><?php echo display_qso_time($row->COL_TIME_ON); ?></td><?php } ?>
 					<td>
 						<div class="d-flex align-items-center justify-content-between">
 							<a class="callsign" href="javascript:void(0)" onclick="displayQso(<?php echo $row->COL_PRIMARY_KEY; ?>)"><?php echo htmlspecialchars(strtoupper($row->COL_CALL)); ?></a>
