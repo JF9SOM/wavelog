@@ -198,9 +198,16 @@ function saveOptions() {
 
 function updateUTCTime() {
 	const utcTimeElement = document.getElementById("utc-time");
-	const now = new Date();
-	const utcTimeString = now.toISOString().split("T")[1].split(".")[0];
-	utcTimeElement.textContent = utcTimeString;
+	let now = new Date();
+	/* If the "local" time display preference is enabled, shift by the
+	 * Wavelog-configured offset before reading it back out via the UTC
+	 * getters (same trick used in qso.js's getUTCTimeStamp()).
+	 */
+	if (typeof user_localtime_usage !== 'undefined' && user_localtime_usage === '1') {
+		now = new Date(now.getTime() + (user_timezone_offset * 1000));
+	}
+	const timeString = ("0" + now.getUTCHours()).slice(-2) + ":" + ("0" + now.getUTCMinutes()).slice(-2) + ":" + ("0" + now.getUTCSeconds()).slice(-2);
+	utcTimeElement.textContent = timeString;
 }
 
 function handleInput() {
@@ -232,7 +239,15 @@ function handleInput() {
 	var retained_info = {};
 
 	qsoList = [];
-	var timezoneOffsetHours = 0;
+	/* Default bare (undecorated) times to the user's configured local
+	 * timezone when the "local" display preference is enabled, so they can
+	 * type times as read off their own clock. An explicit TIMEZONE/TZOFS
+	 * line below still overrides this for a specific logging session
+	 * (e.g. importing someone else's paperlog from a different zone).
+	 */
+	var timezoneOffsetMinutes = (typeof user_localtime_usage !== 'undefined' && user_localtime_usage === '1' && typeof user_timezone_offset !== 'undefined')
+		? Math.round(user_timezone_offset / 60)
+		: 0;
 	$("#qsoTable tbody").empty();
 	errors = [];
 	checkMainFieldsErrors();
@@ -243,7 +258,7 @@ function handleInput() {
 		// Solve timezone offset if specified
 		var tzMatch = row.trim().match(/^(?:TIMEZONE|TZOFS)\s+([+-]\d+)/i);
 		if (tzMatch) {
-			timezoneOffsetHours = parseInt(tzMatch[1], 10);
+			timezoneOffsetMinutes = parseInt(tzMatch[1], 10) * 60;
 			return;
 		}
 
@@ -444,8 +459,9 @@ function handleInput() {
 			var utcDate = extraQsoDate;
 			var utcTime = qsotime;
 
-			if (timezoneOffsetHours !== 0) {
-				var offsetString = (timezoneOffsetHours >= 0 ? '+' : '-') + ('0' + Math.abs(timezoneOffsetHours)).slice(-2) + ':00';
+			if (timezoneOffsetMinutes !== 0) {
+				var absOffsetMinutes = Math.abs(timezoneOffsetMinutes);
+				var offsetString = (timezoneOffsetMinutes >= 0 ? '+' : '-') + ('0' + Math.floor(absOffsetMinutes / 60)).slice(-2) + ':' + ('0' + (absOffsetMinutes % 60)).slice(-2);
 				var fullIsoString = extraQsoDate + 'T' + qsotime.slice(0, 2) + ':' + qsotime.slice(2) + ':00' + offsetString;
 
 				var dateObject = new Date(fullIsoString);

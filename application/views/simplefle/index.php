@@ -2,6 +2,13 @@
 	var Bands = <?php echo json_encode($bands); ?>;
 	var Modes = <?php echo json_encode($modes); ?>;
 	var user_id = <?php echo $this->session->userdata('user_id'); ?>;
+	<?php
+		// Timezone offset for FLE's own TIMEZONE/TZOFS directive (same approach as qso/index.php)
+		$tmp_utc = convert_local_to_utc("00:00", date("Y-m-d"));
+		$user_timezone_offset = strtotime(date("Y-m-d")." 00:00 UTC") - strtotime($tmp_utc['date']." ".$tmp_utc['time']." UTC theme");
+	?>
+	var user_timezone_offset = <?php echo $user_timezone_offset; ?>;
+	var user_localtime_usage = "<?php echo ($this->session->userdata('user_time_display') == 'local') ? '1' : '0'; ?>";
 </script>
 
 <div class="container">
@@ -44,7 +51,7 @@
 			<button type="button" class="btn btn-sm btn-primary me-1" id="simpleFleInfoButton"><?= __("What is that?"); ?></button>
 		</div>
 		<div class="col-xs-12 col-lg-12 col-xl-6 text-end">
-			<p><?= __("Current UTC Time"); ?></p>
+			<p><?= (display_qso_time_label() === 'local') ? __("Current Local Time") : __("Current UTC Time"); ?></p>
 			<h4 class="fw-bold" id="utc-time"></h4>
 		</div>
 	</div>
@@ -131,6 +138,9 @@
 				<div class="row">
 					<div class="col">
 						<p><?= __("Enter the Data"); ?></p>
+						<?php if (display_qso_time_label() === 'local') { ?>
+						<small class="form-text text-muted d-block mb-1"><?= __("Bare times are interpreted as your configured local time and converted to UTC automatically. Add a TIMEZONE/TZOFS line to override for a specific session."); ?></small>
+						<?php } ?>
 						<textarea name="qso" class="form-control qso-area" cols="auto" rows="11" id="sfle_textarea" style="font-family: 'JetBrains Mono', 'Consolas', 'SF Mono', monospace;"></textarea>
 					</div>
 				</div>
@@ -151,8 +161,8 @@
 					<table class="table table-striped table-hover sfletable" id="qsoTable">
 						<thead>
 							<tr>
-								<th><?= __("Date"); ?></th>
-								<th><?= __("Time"); ?></th>
+								<th><?= __("Date (UTC)"); ?></th>
+								<th><?= __("Time (UTC)"); ?></th>
 								<th><?= __("Callsign"); ?></th>
 								<th><?= __("Band"); ?></th>
 								<th><?= __("Mode"); ?></th>
