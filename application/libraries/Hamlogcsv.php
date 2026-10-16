@@ -27,7 +27,6 @@ class Hamlogcsv {
 			'387' => '637A',
 		],
 		'dx_flag' => ['domestic' => '0', 'default' => '8', '375' => '10'],
-		'satellite_bands' => ['V' => [144.0, 148.0], 'U' => [420.0, 450.0]],
 		'band_freq' => [
 			'160m' => '1.9', '80m' => '3.5', '60m' => '5.3', '40m' => '7.1', '30m' => '10.1',
 			'20m' => '14.1', '17m' => '18.1', '15m' => '21.1', '12m' => '24.9', '10m' => '28.1',
@@ -145,27 +144,14 @@ class Hamlogcsv {
 		return rtrim(rtrim($s, '0'), '.');
 	}
 
-	private function sat_band($mhz) {
-		if (!is_numeric($mhz)) {
-			return null;
-		}
-		foreach ($this->cfg['satellite_bands'] as $letter => $range) {
-			if ($mhz >= $range[0] && $mhz <= $range[1]) {
-				return $letter;
-			}
-		}
-		return null;
-	}
-
 	private function freq($rec, &$warns) {
 		$sat = strtoupper($rec['PROP_MODE'] ?? '') === 'SAT';
 		if ($sat && !empty($rec['FREQ']) && !empty($rec['FREQ_RX'])) {
-			$up = $this->sat_band($rec['FREQ']);
-			$down = $this->sat_band($rec['FREQ_RX']);
-			if ($up && $down) {
-				return $up . '/' . $down;
+			// Satellite: integer MHz of uplink/downlink, e.g. 145/435
+			if (is_numeric($rec['FREQ']) && is_numeric($rec['FREQ_RX'])) {
+				return (int) floor($rec['FREQ']) . '/' . (int) floor($rec['FREQ_RX']);
 			}
-			$warns[] = 'satellite bands not recognised; wrote MHz';
+			$warns[] = 'satellite FREQ/FREQ_RX not numeric; wrote MHz';
 		}
 		if (!empty($rec['FREQ'])) {
 			$f = $this->format_mhz($rec['FREQ']);
