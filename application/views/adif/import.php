@@ -333,6 +333,7 @@
 						</div>
 
                         <button type="submit" class="btn btn-sm btn-primary" value="Export"><?= __("Export QSOs") ?></button>
+                        <button type="submit" class="btn btn-sm btn-primary" formaction="<?php echo site_url('adif/export_hamlog'); ?>" title="<?= __("Domestic stations are written in JST, foreign stations in UTC. Encoding: Shift_JIS (cp932).") ?>"><?= __("Turbo HAMLOG CSV Export") ?></button>
                     </form>
 
                     <br><br>

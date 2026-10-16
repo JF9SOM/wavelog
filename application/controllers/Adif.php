@@ -236,6 +236,57 @@ class adif extends CI_Controller {
 		exit;
 	}
 
+	public function export_hamlog() {
+		$this->require_tab_access('export');
+
+		ini_set('memory_limit', '-1');
+		set_time_limit(300);
+
+		$this->load->model('adif_data');
+		$this->load->library('AdifHelper');
+		$this->load->library('Hamlogcsv');
+
+		$station_id = $this->security->xss_clean($this->input->post('station_profile'));
+		$from = $this->input->post('from');
+		$to = $this->input->post('to');
+		$exportLotw = ($this->input->post('exportLotw') == 1);
+
+		if (clubaccess_check(6) && !clubaccess_check(9)) {
+			$onlyop=($this->session->userdata('operator_callsign') ?? '');
+		} else {
+			$onlyop=null;
+		}
+
+		// Step 1: build the ADIF in memory exactly as the ADIF export does
+		$adif = $this->adifhelper->getAdifHeader($this->config->item('app_name'),$this->optionslib->get_option('version'), $this->optionslib->get_option('adif_version'));
+
+		$offset = 0;
+		$chunk_size = 5000;
+		do {
+			$qsos = $this->adif_data->export_custom_chunked($from, $to, $station_id, $exportLotw, $onlyop, $offset, $chunk_size);
+			if ($qsos && $qsos->num_rows() > 0) {
+				foreach ($qsos->result() as $qso) {
+					$adif .= $this->adifhelper->getAdifLine($qso);
+				}
+				$qsos->free_result();
+			}
+			$offset += $chunk_size;
+		} while ($qsos && $qsos->num_rows() > 0);
+
+		// Step 2: ADIF -> Turbo HAMLOG CSV (cp932, CRLF)
+		list($csv, $warnings) = $this->hamlogcsv->adif_to_csv($adif);
+		foreach ($warnings as $w) {
+			log_message('debug', 'HAMLOG CSV export: ' . $w);
+		}
+
+		$filename = $this->session->userdata('user_callsign').'-'.date('Ymd-Hi').'-hamlog.csv';
+		header('Content-Type: text/csv; charset=Shift_JIS');
+		header('Content-Disposition: attachment; filename="'.$filename.'"');
+		header('Content-Length: '.strlen($csv));
+		echo $csv;
+		exit;
+	}
+
 	public function export_lotw() {
 		// Check if user has access to lotw tab
 		$this->require_tab_access('lotw');
